@@ -10,6 +10,21 @@ const config = withPWA({
   swcMinify: true,
   images: {
     domains: ['images.unsplash.com'],
+    unoptimized: false,
+  },
+  // Ensure static assets are properly served
+  async headers() {
+    return [
+      {
+        source: '/assets/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
   experimental: {
     optimizeCss: true

@@ -119,14 +119,14 @@ const productProjects = [
   {
     title: "CredPe",
     description: "Behavioral nudges for credit card payments using psychology. Improved task completion by 30% through A/B testing and user research.",
-    image: "/assets/credpe.webm",
+    image: "/assets/CredPe.webm",
     href: "https://www.canva.com/design/DAGn9qY0HQs/7z2XCFLIEHx_F-5r1V3mLA/edit",
     category: "Product Strategy",
   },
   {
     title: "WellNest",
     description: "Mental wellness MVP for professionals. Top 10 finalist out of 200+ teams in ProductSpace Sprint with retention analytics.",
-    image: "/assets/wellnest.webm",
+    image: "/assets/WellNest.webm",
     href: "https://www.canva.com/design/DAGuMOy1lVs/cCjCNphb2ymp_ec1hxAaFQ/edit",
     category: "Product Design",
   },
