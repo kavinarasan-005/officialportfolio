@@ -2,13 +2,15 @@
 /* Ensure animations work on mobile devices */
 
 [data-scroll-section] {
-  opacity: 1;
+  opacity: 0;
   will-change: transform, opacity;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 [data-scroll] {
-  opacity: 1;
+  opacity: 0;
   will-change: transform, opacity;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 /* Animation states for scroll elements */
@@ -16,29 +18,35 @@
   opacity: 1;
 }
 
-/* Ensure smooth transitions on mobile */
-@media (max-width: 768px) {
-  [data-scroll-section],
+/* Enable animations on mobile - locomotive-scroll will handle visibility */
+@media (max-width: 1024px) {
+  [data-scroll-section] {
+    opacity: 0;
+  }
+  
   [data-scroll] {
-    opacity: 1 !important;
-    transform: none !important;
+    opacity: 0;
   }
   
-  /* Force animations to work on mobile */
-  html.is-revealed [data-scroll-section] {
+  /* Let locomotive-scroll reveal elements */
+  html.is-revealed [data-scroll-section],
+  [data-scroll-section].is-revealed {
     opacity: 1;
+    transform: translateY(0);
   }
   
-  html.is-revealed [data-scroll] {
+  html.is-revealed [data-scroll],
+  [data-scroll].is-revealed {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
 /* Fade in animations */
-@keyframes fadeIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -47,17 +55,11 @@
 }
 
 [data-scroll-section].is-revealed {
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* Ensure sections are visible by default on mobile */
-@media (max-width: 1024px) {
-  section[data-scroll-section] {
-    opacity: 1 !important;
-  }
-  
-  [data-scroll] {
-    opacity: 1 !important;
-  }
+/* Parallax effect for data-scroll elements */
+[data-scroll][data-scroll-speed] {
+  will-change: transform;
 }
 
