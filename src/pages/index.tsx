@@ -3,7 +3,7 @@ import { useEffect, useRef, Suspense, useState } from "react";
 import styles from "@/styles/Home.module.css";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Dynamically import Spline with no SSR
 const Spline = dynamic(() => import("@splinetool/react-spline").then(mod => mod.default), {
