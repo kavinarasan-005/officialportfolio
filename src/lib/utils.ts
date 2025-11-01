@@ -37,6 +37,36 @@ export function scrollTo(elementOrSelector: Element | string | null) {
       top: offsetPosition,
       behavior: 'smooth'
     });
+    
+    // Trigger animations after scroll completes on mobile
+    // Smooth scroll typically takes 300-600ms depending on distance
+    const scrollDistance = Math.abs(window.pageYOffset - offsetPosition);
+    const scrollDuration = Math.min(Math.max(scrollDistance / 2, 300), 800);
+    
+    // Trigger animations immediately for the target element and nearby elements
+    const triggerAnimations = () => {
+      const scrollElements = document.querySelectorAll('[data-scroll-section], [data-scroll]');
+      scrollElements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        // Check if element is visible in viewport (with some buffer)
+        const isVisible = rect.top < window.innerHeight + 150 && rect.bottom > -150;
+        
+        if (isVisible && !el.classList.contains('is-revealed')) {
+          el.classList.add('is-revealed', 'is-inview');
+        }
+      });
+    };
+    
+    // Trigger immediately for elements already near viewport
+    requestAnimationFrame(() => {
+      triggerAnimations();
+    });
+    
+    // Trigger again after scroll animation completes
+    setTimeout(() => {
+      triggerAnimations();
+    }, scrollDuration);
+    
     return;
   }
 
