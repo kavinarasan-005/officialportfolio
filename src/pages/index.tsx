@@ -534,7 +534,7 @@ export default function Home() {
 
   return (
     <Container>
-      <div className="flex flex-col space-y-32">
+      <div className="flex flex-col space-y-16 sm:space-y-24 md:space-y-32">
         <div ref={refScrollContainer}>
           <Gradient />
 
@@ -542,35 +542,36 @@ export default function Home() {
           <section
             id="home"
             data-scroll-section
-            className="mt-40 flex w-full flex-col items-center xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between"
+            className="mt-20 sm:mt-32 md:mt-40 flex w-full flex-col items-center xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between px-4 sm:px-6 lg:px-8"
           >
-            <div className={styles.intro}>
-              <div className="flex flex-row items-center space-x-1.5">
+            <div className={cn(styles.intro, "w-full max-w-4xl")}>
+              <div className="flex flex-row flex-wrap items-center gap-1.5 sm:space-x-1.5">
                 <span className={styles.pill}>Product</span>
                 <span className={styles.pill}>Analytics</span>
                 <span className={styles.pill}>Development</span>
               </div>
-              <div>
+              <div className="w-full">
                 <h1>
-                  <span className="text-6xl tracking-tighter text-foreground 2xl:text-8xl">
+                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-foreground 2xl:text-8xl">
                     Hi, I&apos;m Kavin Arasan
                     <br />
                   </span>
-                  <span className="clash-grotesk text-gradient text-6xl 2xl:text-8xl">
+                  <span className="clash-grotesk text-gradient text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-8xl">
                     Product & Data Analyst
                   </span>
                 </h1>
-                <p className="mt-1 max-w-lg tracking-tight text-muted-foreground 2xl:text-xl">
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg max-w-lg tracking-tight text-muted-foreground 2xl:text-xl">
                   Passionate about turning data into decisions and insights into products. Building dashboards that uncover hidden trends and designing user experiences that drive behavior.
                 </p>
               </div>
-              <span className="flex flex-row items-center space-x-1.5 pt-6">
-                <Button onClick={() => scrollTo("#contact")}>
+              <span className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-1.5 pt-4 sm:pt-6 w-full sm:w-auto">
+                <Button onClick={() => scrollTo("#contact")} className="w-full sm:w-auto">
                   Get in touch <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => scrollTo("#about")}
+                  className="w-full sm:w-auto"
                 >
                   Learn More
                 </Button>
@@ -588,11 +589,11 @@ export default function Home() {
             </div>
             <div
               id={styles["canvas-container"]}
-              className="mt-14 h-full w-full xl:mt-0"
+              className="mt-8 sm:mt-10 md:mt-14 h-full w-full xl:mt-0"
             >
               <Suspense fallback={
-                <div className="flex items-center justify-center h-full min-h-[400px]">
-                  <span className="text-muted-foreground">Loading 3D scene...</span>
+                <div className="flex items-center justify-center h-full min-h-[250px] sm:min-h-[350px]">
+                  <span className="text-muted-foreground text-sm sm:text-base">Loading 3D scene...</span>
                 </div>
               }>
                 <ErrorBoundary fallback={<SplineError />}>
@@ -612,21 +613,21 @@ export default function Home() {
           </section>
 
           {/* About */}
-          <section id="about" data-scroll-section>
-            <div className="my-8 flex max-w-6xl flex-col justify-start space-y-10">
-              <h2 className="py-8 pb-2 text-4xl tracking-tighter leading-normal text-foreground xl:text-5xl">
+          <section id="about" data-scroll-section className="px-4 sm:px-6 lg:px-8">
+            <div className="my-6 sm:my-8 flex max-w-6xl mx-auto flex-col justify-start space-y-6 sm:space-y-10">
+              <h2 className="py-4 sm:py-8 pb-2 text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-normal text-foreground xl:text-5xl">
                 Currently pursuing B.Tech. in Computer Science at ABV-IIITM Gwalior and seeking internships in Product, Analytics, and Development starting January 2026. I enjoy collaborating across business and tech to make measurable impact through data-driven insights.
               </h2>
-              <div className="grid grid-cols-2 gap-8 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 xl:grid-cols-3">
                 {aboutStats.map((stat) => (
                   <div
                     key={stat.label}
                     className="flex flex-col items-center text-center xl:items-start xl:text-start"
                   >
-                    <span className="clash-grotesk text-gradient text-4xl font-semibold tracking-tight xl:text-6xl">
+                    <span className="clash-grotesk text-gradient text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight xl:text-6xl">
                       {stat.value}
                     </span>
-                    <span className="tracking-tight text-muted-foreground xl:text-lg">
+                    <span className="text-xs sm:text-sm tracking-tight text-muted-foreground xl:text-lg">
                       {stat.label}
                     </span>
                   </div>
@@ -636,34 +637,34 @@ export default function Home() {
           </section>
 
           {/* Core Technologies */}
-          <section id="technologies" data-scroll-section>
+          <section id="technologies" data-scroll-section className="px-4 sm:px-6 lg:px-8">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="my-4 flex flex-col justify-start space-y-6"
+              className="my-4 sm:my-6 flex flex-col justify-start space-y-4 sm:space-y-6"
             >
-              <div className="grid items-center gap-1.5 md:grid-cols-2 xl:grid-cols-3">
-                <div className="flex flex-col py-6 xl:p-6">
-                  <h2 className="text-4xl tracking-tighter">
+              <div className="grid items-center gap-3 sm:gap-1.5 md:grid-cols-2 xl:grid-cols-3">
+                <div className="flex flex-col py-4 sm:py-6 xl:p-6">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tighter">
                     Core
                     <br />
                     <span className="text-gradient clash-grotesk">
                       Skills
                     </span>
                   </h2>
-                  <p className="mt-2 tracking-tight text-secondary-foreground">
+                  <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
                     My expertise spans product management, data analytics, and full-stack development.
                   </p>
                 </div>
                 {coreTechnologies.map((tech) => (
                   <div
                     key={tech.title}
-                    className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[280px]"
+                    className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:min-h-[280px]"
                   >
                     <div className="flex flex-col items-start">
-                      <tech.icon className="mb-6 text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
+                      <tech.icon className="mb-4 sm:mb-6 text-primary" size={20} />
+                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
                         {tech.title}
                       </span>
                     </div>
@@ -677,29 +678,29 @@ export default function Home() {
           </section>
 
           {/* Experience */}
-          <section id="experience" data-scroll-section>
+          <section id="experience" data-scroll-section className="px-4 sm:px-6 lg:px-8">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="-mt-8 mb-2"
+              className="-mt-4 sm:-mt-8 mb-2"
             >
-              <span className="text-gradient clash-grotesk text-sm tracking-tighter">
+              <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
                 ✨ Recent Experience
               </span>
-              <h2 className="mt-3 text-4xl tracking-tighter xl:text-6xl">
+              <h2 className="mt-2 sm:mt-3 text-2xl sm:text-3xl md:text-4xl tracking-tighter xl:text-6xl">
                 Professional{" "}
                 <span className="text-gradient clash-grotesk">Experience.</span>
               </h2>
-              <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
+              <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
                 Recent internships and freelance work in technology and product development.
               </p>
 
-              <div className="mt-8 grid items-start gap-6 md:grid-cols-2">
+              <div className="mt-6 sm:mt-8 grid items-start gap-4 sm:gap-6 md:grid-cols-2">
                 {/* IT Intern - Eros Group */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
                   <div className="flex flex-col items-start">
-                    <Building className="mb-6 text-primary" size={20} />
+                    <Building className="mb-4 sm:mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
                       IT Intern — Eros Group
                     </span>
@@ -717,10 +718,10 @@ export default function Home() {
 
                 {/* Frontend Developer - LUMINTRIQAI */}
                 <Link href="https://www.figma.com/design/Wz2EkcZVY47SggKG6SnTMU/Actual-Page?node-id=0-1&t=hp6ZNFdTmxFTqoaL-1" target="_blank" className="group">
-                  <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
+                  <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
                     <div className="flex flex-col items-start">
-                      <Code2 className="mb-6 text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
+                      <Code2 className="mb-4 sm:mb-6 text-primary" size={20} />
+                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
                         Frontend Developer — LUMINTRIQAI
                       </span>
                       <span className="mt-1 text-xs text-primary font-medium">
@@ -740,7 +741,7 @@ export default function Home() {
           </section>
 
           {/* Projects */}
-          <section id="projects" data-scroll-section>
+          <section id="projects" data-scroll-section className="px-4 sm:px-6 lg:px-8">
             {/* Gradient */}
             <div className="relative isolate -z-10">
               <div
@@ -756,29 +757,29 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div data-scroll data-scroll-speed=".4" className="-mt-8 mb-2">
-              <span className="text-gradient clash-grotesk text-sm tracking-tighter">
+            <div data-scroll data-scroll-speed=".4" className="-mt-4 sm:-mt-8 mb-2">
+              <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
                 ✨ Featured Projects
               </span>
-              <h2 className="mt-3 text-4xl tracking-tighter xl:text-6xl">
+              <h2 className="mt-2 sm:mt-3 text-2xl sm:text-3xl md:text-4xl tracking-tighter xl:text-6xl">
                 Product & Analytics Portfolio.
               </h2>
-              <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
+              <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
                 A showcase of my work in product management, data analytics, and full-stack development with measurable impact.
               </p>
 
               {/* Carousel */}
-              <div className="mt-8 space-y-8">
+              <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
                 {/* Product & Strategy Projects */}
                 <div>
-                  <h3 className="text-xl tracking-tighter text-foreground mb-6 flex items-center">
+                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
                     <Target className="mr-2 text-primary" size={20} />
                     Product & Strategy
                   </h3>
                   <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {productProjects.map((project, index) => (
-                        <CarouselItem key={index} className="md:basis-1/3">
+                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
                           <Card id="tilt">
                             <CardHeader className="p-0">
                               <Link href={project.href} target="_blank" passHref>
@@ -825,14 +826,14 @@ export default function Home() {
 
                 {/* Development & Analytics Projects */}
                 <div>
-                  <h3 className="text-xl tracking-tighter text-foreground mb-6 flex items-center">
+                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
                     <Code2 className="mr-2 text-primary" size={20} />
                     Development & Analytics
                   </h3>
                   <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {developmentProjects.map((project, index) => (
-                        <CarouselItem key={index} className="md:basis-1/3">
+                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
                           <Card id="tilt">
                             <CardHeader className="p-0">
                               <Link href={project.href} target="_blank" passHref>
@@ -877,14 +878,14 @@ export default function Home() {
 
                 {/* Design & UI/UX Projects */}
                 <div>
-                  <h3 className="text-xl tracking-tighter text-foreground mb-6 flex items-center">
+                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
                     <Frame className="mr-2 text-primary" size={20} />
                     Design & UI/UX
                   </h3>
                   <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {designProjects.map((project, index) => (
-                        <CarouselItem key={index} className="md:basis-1/3">
+                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
                           <Card id="tilt">
                             <CardHeader className="p-0">
                               <Link href={project.href} target="_blank" passHref>
@@ -931,31 +932,31 @@ export default function Home() {
           </section>
 
           {/* Expertise & Approach */}
-          <section id="expertise" data-scroll-section>
+          <section id="expertise" data-scroll-section className="px-4 sm:px-6 lg:px-8">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="-mt-8 mb-2 flex flex-col justify-start space-y-6"
+              className="-mt-4 sm:-mt-8 mb-2 flex flex-col justify-start space-y-4 sm:space-y-6"
             >
-              <div className="grid items-start gap-1.5 md:grid-cols-2 xl:grid-cols-3">
-                <div className="flex flex-col py-6 xl:p-6">
-                  <h2 className="text-4xl tracking-tighter">
+              <div className="grid items-start gap-3 sm:gap-1.5 md:grid-cols-2 xl:grid-cols-3">
+                <div className="flex flex-col py-4 sm:py-6 xl:p-6">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tighter">
                     Expertise &
                     <br />
                     <span className="text-gradient clash-grotesk">
                       Approach
                     </span>
                   </h2>
-                  <p className="mt-2 tracking-tight text-secondary-foreground">
+                  <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
                     Combining technical skills with strategic thinking for measurable business impact.
                   </p>
                 </div>
                 
                 {/* Product Strategy & Impact */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md h-[280px]">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:h-[280px]">
                   <div className="flex flex-col items-start">
-                    <Target className="mb-6 text-primary" size={20} />
+                    <Target className="mb-4 sm:mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
                       Product Strategy & Impact
                     </span>
@@ -969,9 +970,9 @@ export default function Home() {
                 </div>
 
                 {/* Data Analytics & Intelligence */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md h-[280px]">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:h-[280px]">
                   <div className="flex flex-col items-start">
-                    <BarChart3 className="mb-6 text-primary" size={20} />
+                    <BarChart3 className="mb-4 sm:mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
                       Data Analytics & Intelligence
                     </span>
@@ -985,7 +986,7 @@ export default function Home() {
                 </div>
 
                 {/* Full-Stack Development */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md h-[280px]">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:h-[280px]">
                   <div className="flex flex-col items-start">
                     <Code2 className="mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
@@ -1001,9 +1002,9 @@ export default function Home() {
                 </div>
 
                 {/* UX Design & Research */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md h-[280px]">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:h-[280px]">
                   <div className="flex flex-col items-start">
-                    <Frame className="mb-6 text-primary" size={20} />
+                    <Frame className="mb-4 sm:mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
                       UX Design & Research
                     </span>
@@ -1017,9 +1018,9 @@ export default function Home() {
                 </div>
 
                 {/* Data-Driven Decision Making */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md h-[280px]">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:h-[280px]">
                   <div className="flex flex-col items-start">
-                    <BarChart3 className="mb-6 text-primary" size={20} />
+                    <BarChart3 className="mb-4 sm:mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
                       Data-Driven Methodology
                     </span>
@@ -1030,9 +1031,9 @@ export default function Home() {
                 </div>
 
                 {/* Cross-Functional Collaboration */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md h-[280px]">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[200px] sm:min-h-[240px] md:h-[280px]">
                   <div className="flex flex-col items-start">
-                    <Globe className="mb-6 text-primary" size={20} />
+                    <Globe className="mb-4 sm:mb-6 text-primary" size={20} />
                     <span className="text-lg tracking-tighter text-foreground">
                       Collaborative Leadership
                     </span>
@@ -1046,36 +1047,36 @@ export default function Home() {
           </section>
 
           {/* Contact */}
-          <section id="contact" data-scroll-section>
+          <section id="contact" data-scroll-section className="px-4 sm:px-6 lg:px-8">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="-mt-8 mb-8 flex flex-col justify-start space-y-12"
+              className="-mt-4 sm:-mt-8 mb-6 sm:mb-8 flex flex-col justify-start space-y-8 sm:space-y-12"
             >
               {/* Header */}
               <div className="flex flex-col items-start">
-                <span className="text-gradient clash-grotesk text-sm tracking-tighter">
+                <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
                   ✨ Let&apos;s Connect
                 </span>
-                <h2 className="mt-3 text-4xl tracking-tighter xl:text-6xl">
+                <h2 className="mt-2 sm:mt-3 text-2xl sm:text-3xl md:text-4xl tracking-tighter xl:text-6xl">
                   Ready to create{" "}
                   <span className="text-gradient clash-grotesk">impact?</span>
                 </h2>
-                <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg max-w-2xl">
+                <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg max-w-2xl">
                   Available for Product Management, Analytics, and Development internships starting January 2026. Let&apos;s build something amazing together.
                 </p>
               </div>
 
               {/* Contact Grid */}
-              <div className="grid items-stretch gap-8 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid items-stretch gap-4 sm:gap-6 md:gap-8 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
 
                 {/* Let's Connect */}
                 <Link href="mailto:kavinarasan2019@gmail.com" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
+                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
                     <div className="flex flex-col items-start space-y-2">
                       <Mail className="text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
+                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
                         Let&apos;s Collaborate
                       </span>
                     </div>
@@ -1090,10 +1091,10 @@ export default function Home() {
 
                 {/* LinkedIn */}
                 <Link href="https://linkedin.com/in/kavinarasan" target="_blank" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
+                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
                     <div className="flex flex-col items-start space-y-2">
                       <Linkedin className="text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
+                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
                         Professional Network
                       </span>
                     </div>
@@ -1108,10 +1109,10 @@ export default function Home() {
 
                 {/* GitHub */}
                 <Link href="https://github.com/kavinarasan-005" target="_blank" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
+                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
                     <div className="flex flex-col items-start space-y-2">
                       <Code2 className="text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
+                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
                         Code Repository
                       </span>
                     </div>
@@ -1127,10 +1128,10 @@ export default function Home() {
                 {/* Resume */}
                             {/* Resume */}
                 <Link href="https://drive.google.com/file/d/14HQoHIGPDlGffvKBwOrx6YKhjW8W4j9o/view?usp=sharing" target="_blank" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
+                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
                     <div className="flex flex-col items-start space-y-2">
                       <FileText className="text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
+                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
                         Professional Resume
                       </span>
                     </div>
