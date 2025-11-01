@@ -1,83 +1,46 @@
 /* Scroll animations for locomotive-scroll */
-/* Ensure animations work on mobile devices */
+/* Desktop: locomotive-scroll handles animations */
+/* Mobile: IntersectionObserver with smooth transitions */
 
-/* Initial state - elements start hidden */
+/* Desktop - visible by default, locomotive-scroll handles animations */
 [data-scroll-section] {
-  opacity: 0;
+  opacity: 1;
   will-change: transform, opacity;
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  transform: translateY(30px);
 }
 
 [data-scroll] {
-  opacity: 0;
-  will-change: transform, opacity;
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  transform: translateY(20px);
-}
-
-/* Revealed state - when element comes into view */
-[data-scroll-section].is-revealed,
-html.is-revealed [data-scroll-section] {
   opacity: 1;
-  transform: translateY(0);
+  will-change: transform, opacity;
 }
 
-[data-scroll].is-revealed,
+/* Desktop - let locomotive-scroll handle reveals */
+html.is-revealed [data-scroll-section],
 html.is-revealed [data-scroll] {
   opacity: 1;
-  transform: translateY(0);
 }
 
-/* Animation states for scroll elements */
-[data-scroll-section].is-inview {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Mobile-specific: Use IntersectionObserver fallback for better animation support */
+/* Mobile-specific animations */
 @media (max-width: 1024px) {
-  /* Allow opacity transitions on mobile */
+  /* Initial hidden state on mobile only */
   [data-scroll-section],
   [data-scroll] {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
   }
   
-  /* Revealed state on mobile */
+  /* Revealed state on mobile - smooth transition */
   [data-scroll-section].is-revealed,
   [data-scroll-section].is-inview {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
+    opacity: 1;
+    transform: translateY(0);
   }
   
   [data-scroll].is-revealed,
   [data-scroll].is-inview {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-  }
-  
-  /* Force locomotive-scroll revealed class to work */
-  html.is-revealed [data-scroll-section],
-  html.is-revealed [data-scroll] {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Fade in animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-[data-scroll-section].is-revealed {
-  animation: fadeInUp 0.8s ease-out forwards;
 }
 

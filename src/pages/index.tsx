@@ -429,13 +429,14 @@ export default function Home() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as { locomotive?: any }).locomotive = loco;
 
-      // Add IntersectionObserver fallback for mobile animations
+      // Add IntersectionObserver fallback for mobile animations only
       // This ensures animations work even if locomotive-scroll has issues on mobile
       const isMobile = window.innerWidth <= 1024;
       if (isMobile) {
+        // Trigger animation earlier for smoother feel
         const observerOptions = {
           root: null,
-          rootMargin: '0px 0px -100px 0px',
+          rootMargin: '0px 0px -50px 0px', // Trigger 50px before element enters viewport
           threshold: 0.1
         };
 
