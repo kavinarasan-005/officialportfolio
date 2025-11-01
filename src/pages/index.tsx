@@ -772,10 +772,17 @@ export default function Home() {
               <div className="mt-8 sm:mt-10 space-y-8 sm:space-y-10">
                 {/* Product & Strategy Projects */}
                 <div>
-                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
-                    <Target className="mr-2 text-primary" size={20} />
-                    Product & Strategy
-                  </h3>
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
+                    <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
+                      <Target className="mr-2 text-primary" size={20} />
+                      Product & Strategy
+                    </h3>
+                    {/* Mobile swipe indicator */}
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
+                      <span>Swipe</span>
+                      <ChevronRight className="h-3 w-3" />
+                    </div>
+                  </div>
                   <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {productProjects.map((project, index) => (
@@ -826,10 +833,17 @@ export default function Home() {
 
                 {/* Development & Analytics Projects */}
                 <div>
-                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
-                    <Code2 className="mr-2 text-primary" size={20} />
-                    Development & Analytics
-                  </h3>
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
+                    <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
+                      <Code2 className="mr-2 text-primary" size={20} />
+                      Development & Analytics
+                    </h3>
+                    {/* Mobile swipe indicator */}
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
+                      <span>Swipe</span>
+                      <ChevronRight className="h-3 w-3" />
+                    </div>
+                  </div>
                   <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {developmentProjects.map((project, index) => (
@@ -878,10 +892,17 @@ export default function Home() {
 
                 {/* Design & UI/UX Projects */}
                 <div>
-                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
-                    <Frame className="mr-2 text-primary" size={20} />
-                    Design & UI/UX
-                  </h3>
+                  <div className="flex items-center justify-between mb-4 sm:mb-6">
+                    <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
+                      <Frame className="mr-2 text-primary" size={20} />
+                      Design & UI/UX
+                    </h3>
+                    {/* Mobile swipe indicator */}
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
+                      <span>Swipe</span>
+                      <ChevronRight className="h-3 w-3" />
+                    </div>
+                  </div>
                   <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {designProjects.map((project, index) => (
