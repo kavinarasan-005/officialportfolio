@@ -534,7 +534,7 @@ export default function Home() {
 
   return (
     <Container>
-      <div className="flex flex-col space-y-16 sm:space-y-24 md:space-y-32">
+      <div className="flex flex-col space-y-24 sm:space-y-28 md:space-y-32">
         <div ref={refScrollContainer}>
           <Gradient />
 
@@ -542,7 +542,7 @@ export default function Home() {
           <section
             id="home"
             data-scroll-section
-            className="mt-20 sm:mt-32 md:mt-40 flex w-full flex-col items-center px-4 sm:px-6 xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between xl:px-0"
+            className="mt-20 sm:mt-32 md:mt-40 flex w-full flex-col items-center px-4 sm:px-6 py-12 sm:py-16 xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between xl:px-0 xl:py-0"
           >
             <div className={styles.intro}>
               <div className="flex flex-row flex-wrap items-center gap-1.5">
@@ -613,8 +613,8 @@ export default function Home() {
           </section>
 
           {/* About */}
-          <section id="about" data-scroll-section className="px-4 sm:px-6">
-            <div className="my-8 flex max-w-6xl flex-col justify-start space-y-6 sm:space-y-10">
+          <section id="about" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
+            <div className="flex max-w-6xl flex-col justify-start space-y-8 sm:space-y-10">
               <h2 className="py-4 sm:py-8 pb-2 text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-normal text-foreground xl:text-5xl">
                 Currently pursuing B.Tech. in Computer Science at ABV-IIITM Gwalior and seeking internships in Product, Analytics, and Development starting January 2026. I enjoy collaborating across business and tech to make measurable impact through data-driven insights.
               </h2>
@@ -637,12 +637,12 @@ export default function Home() {
           </section>
 
           {/* Core Technologies */}
-          <section id="technologies" data-scroll-section className="px-4 sm:px-6">
+          <section id="technologies" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="my-4 flex flex-col justify-start space-y-4 sm:space-y-6"
+              className="flex flex-col justify-start space-y-6 sm:space-y-8"
             >
               <div className="grid items-center gap-3 sm:gap-4 md:gap-1.5 md:grid-cols-2 xl:grid-cols-3">
                 <div className="flex flex-col py-4 sm:py-6 xl:p-6">
@@ -678,12 +678,12 @@ export default function Home() {
           </section>
 
           {/* Experience */}
-          <section id="experience" data-scroll-section className="px-4 sm:px-6">
+          <section id="experience" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="-mt-8 mb-2"
+              className="mb-4 sm:mb-6"
             >
               <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
                 ✨ Recent Experience
@@ -741,7 +741,7 @@ export default function Home() {
           </section>
 
           {/* Projects */}
-          <section id="projects" data-scroll-section className="px-4 sm:px-6">
+          <section id="projects" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
             {/* Gradient */}
             <div className="relative isolate -z-10">
               <div
@@ -757,7 +757,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div data-scroll data-scroll-speed=".4" className="-mt-8 mb-2">
+            <div data-scroll data-scroll-speed=".4" className="mb-4 sm:mb-6">
               <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
                 ✨ Featured Projects
               </span>
@@ -769,7 +769,7 @@ export default function Home() {
               </p>
 
               {/* Carousel */}
-              <div className="mt-6 sm:mt-8 space-y-6 sm:space-y-8">
+              <div className="mt-8 sm:mt-10 space-y-8 sm:space-y-10">
                 {/* Product & Strategy Projects */}
                 <div>
                   <h3 className="text-lg sm:text-xl tracking-tighter text-foreground mb-4 sm:mb-6 flex items-center">
@@ -932,12 +932,12 @@ export default function Home() {
           </section>
 
           {/* Expertise & Approach */}
-          <section id="expertise" data-scroll-section className="px-4 sm:px-6">
+          <section id="expertise" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="-mt-8 mb-2 flex flex-col justify-start space-y-4 sm:space-y-6"
+              className="flex flex-col justify-start space-y-6 sm:space-y-8"
             >
               <div className="grid items-start gap-3 sm:gap-4 md:gap-1.5 md:grid-cols-2 xl:grid-cols-3">
                 <div className="flex flex-col py-4 sm:py-6 xl:p-6">
@@ -1047,12 +1047,12 @@ export default function Home() {
           </section>
 
           {/* Contact */}
-          <section id="contact" data-scroll-section className="px-4 sm:px-6">
+          <section id="contact" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
             <div
               data-scroll
               data-scroll-speed=".4"
               data-scroll-position="top"
-              className="-mt-8 mb-8 flex flex-col justify-start space-y-8 sm:space-y-12"
+              className="flex flex-col justify-start space-y-8 sm:space-y-12"
             >
               {/* Header */}
               <div className="flex flex-col items-start">
