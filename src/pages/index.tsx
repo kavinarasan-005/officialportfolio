@@ -626,7 +626,7 @@ export default function Home() {
             </div>
             <div
               id={styles["canvas-container"]}
-              className="mt-8 sm:mt-12 md:mt-14 w-full aspect-[16/9] sm:aspect-auto sm:h-[400px] md:h-[450px] xl:mt-0 xl:h-[515px]"
+              className="mt-8 sm:mt-12 md:mt-14 h-[300px] sm:h-[400px] md:h-[450px] w-full xl:mt-0 xl:h-[515px]"
             >
               <Suspense fallback={
                 <div className="flex items-center justify-center h-full min-h-[400px]">
@@ -634,18 +634,16 @@ export default function Home() {
                 </div>
               }>
                 <ErrorBoundary fallback={<SplineError />}>
-                  <div className="w-full h-full">
-                    <Spline 
-                      scene={splineScene}
-                      onLoad={() => {
-                        console.log("Spline scene loaded successfully");
-                      }}
-                      onError={(error) => {
-                        console.error("Spline error:", error);
-                        console.log("Attempting to load from:", splineScene);
-                      }}
-                    />
-                  </div>
+                  <Spline 
+                    scene={splineScene}
+                    onLoad={() => {
+                      console.log("Spline scene loaded successfully");
+                    }}
+                    onError={(error) => {
+                      console.error("Spline error:", error);
+                      console.log("Attempting to load from:", splineScene);
+                    }}
+                  />
                 </ErrorBoundary>
               </Suspense>
             </div>

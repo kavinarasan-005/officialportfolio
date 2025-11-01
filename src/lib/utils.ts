@@ -23,7 +23,24 @@ export function scrollTo(elementOrSelector: Element | string | null) {
   // Calculate offset for navbar (assuming navbar height is ~80px)
   const navHeight = 80;
 
-  // If locomotive instance exists, use its scrollTo for correct offset and smooth behavior
+  // On mobile, use native smooth scrolling for better performance
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1024;
+  
+  if (isMobile) {
+    // Calculate position with navbar offset for mobile
+    const elementRect = element.getBoundingClientRect();
+    const elementTop = elementRect.top + window.pageYOffset;
+    const offsetPosition = Math.max(0, elementTop - navHeight);
+    
+    // Use native window.scrollTo for smooth, performant scrolling on mobile
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+    return;
+  }
+
+  // Desktop: Use locomotive-scroll for smooth behavior
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof window !== 'undefined' && (window as { locomotive?: unknown }).locomotive) {
     try {

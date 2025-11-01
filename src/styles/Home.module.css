@@ -27,33 +27,7 @@
 #canvas-container
 {
     @apply bg-background border rounded-2xl sm:rounded-3xl w-full overflow-hidden;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     /* this fixes the overflow:hidden in Chrome/Opera */
     -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
-}
-
-/* Spline canvas inside container - mobile optimization */
-#canvas-container > div,
-#canvas-container canvas {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain;
-}
-
-/* Mobile-specific adjustments */
-@media (max-width: 768px) {
-    #canvas-container {
-        aspect-ratio: 16/9;
-        max-width: 100%;
-    }
-    
-    #canvas-container > div,
-    #canvas-container canvas {
-        transform-origin: center;
-        transform: scale(1);
-    }
 }
