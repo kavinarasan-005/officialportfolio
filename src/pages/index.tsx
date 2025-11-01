@@ -842,6 +842,7 @@ export default function Home() {
                                     autoPlay
                                     loop
                                     muted
+                                    playsInline
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
                                   />
                                 ) : (
@@ -894,6 +895,7 @@ export default function Home() {
                                     autoPlay
                                     loop
                                     muted
+                                    playsInline
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
                                   />
                                 ) : (
