@@ -384,6 +384,14 @@ export default function Home() {
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+  const [splineScene, setSplineScene] = useState<string>("/assets/scene.splinecode");
+
+  // Set absolute URL for Spline scene in production
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setSplineScene(`${window.location.origin}/assets/scene.splinecode`);
+    }
+  }, []);
 
   // handle scroll
   useEffect(() => {
@@ -589,16 +597,13 @@ export default function Home() {
               }>
                 <ErrorBoundary fallback={<SplineError />}>
                   <Spline 
-                    scene={typeof window !== 'undefined' ? `${window.location.origin}/assets/scene.splinecode` : "/assets/scene.splinecode"}
+                    scene={splineScene}
                     onLoad={() => {
                       console.log("Spline scene loaded successfully");
                     }}
                     onError={(error) => {
                       console.error("Spline error:", error);
-                      if (typeof window !== 'undefined') {
-                        const absoluteUrl = `${window.location.protocol}//${window.location.host}/assets/scene.splinecode`;
-                        console.log("Attempting to load from:", absoluteUrl);
-                      }
+                      console.log("Attempting to load from:", splineScene);
                     }}
                   />
                 </ErrorBoundary>
