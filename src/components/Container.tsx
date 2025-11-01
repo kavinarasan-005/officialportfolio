@@ -129,7 +129,7 @@ export default function Container(props: ContainerProps) {
       <Head>
         <title>{meta.title}</title>
         <meta name="robots" content="follow, index" />
-        <meta name="theme-color" content="#7B82FE" />
+        <meta name="theme-color" content="#0A0A13" />
         <meta content={meta.description} name="description" />
         <meta
           property="og:url"
@@ -150,11 +150,10 @@ export default function Container(props: ContainerProps) {
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.image} />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=2" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=2" />
-        <link rel="shortcut icon" href="/favicon.ico?v=2" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=2" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=3" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=3" />
+        <link rel="shortcut icon" type="image/png" href="/favicon.png?v=3" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=3" />
       </Head>
       <nav
         className={cn(
