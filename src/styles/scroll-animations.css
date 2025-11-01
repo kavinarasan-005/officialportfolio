@@ -1,44 +1,75 @@
 /* Scroll animations for locomotive-scroll */
 /* Ensure animations work on mobile devices */
 
+/* Initial state - elements start hidden */
 [data-scroll-section] {
-  opacity: 1;
+  opacity: 0;
   will-change: transform, opacity;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transform: translateY(30px);
 }
 
 [data-scroll] {
-  opacity: 1;
+  opacity: 0;
   will-change: transform, opacity;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transform: translateY(20px);
+}
+
+/* Revealed state - when element comes into view */
+[data-scroll-section].is-revealed,
+html.is-revealed [data-scroll-section] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-scroll].is-revealed,
+html.is-revealed [data-scroll] {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Animation states for scroll elements */
 [data-scroll-section].is-inview {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* Ensure smooth transitions on mobile */
-@media (max-width: 768px) {
+/* Mobile-specific: Use IntersectionObserver fallback for better animation support */
+@media (max-width: 1024px) {
+  /* Allow opacity transitions on mobile */
   [data-scroll-section],
   [data-scroll] {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  /* Revealed state on mobile */
+  [data-scroll-section].is-revealed,
+  [data-scroll-section].is-inview {
     opacity: 1 !important;
-    transform: none !important;
+    transform: translateY(0) !important;
   }
   
-  /* Force animations to work on mobile */
-  html.is-revealed [data-scroll-section] {
-    opacity: 1;
+  [data-scroll].is-revealed,
+  [data-scroll].is-inview {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
   }
   
+  /* Force locomotive-scroll revealed class to work */
+  html.is-revealed [data-scroll-section],
   html.is-revealed [data-scroll] {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
 /* Fade in animations */
-@keyframes fadeIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -47,17 +78,6 @@
 }
 
 [data-scroll-section].is-revealed {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-/* Ensure sections are visible by default on mobile */
-@media (max-width: 1024px) {
-  section[data-scroll-section] {
-    opacity: 1 !important;
-  }
-  
-  [data-scroll] {
-    opacity: 1 !important;
-  }
+  animation: fadeInUp 0.8s ease-out forwards;
 }
 

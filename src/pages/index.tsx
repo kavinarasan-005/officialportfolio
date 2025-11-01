@@ -429,6 +429,35 @@ export default function Home() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as { locomotive?: any }).locomotive = loco;
 
+      // Add IntersectionObserver fallback for mobile animations
+      // This ensures animations work even if locomotive-scroll has issues on mobile
+      const isMobile = window.innerWidth <= 1024;
+      if (isMobile) {
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px 0px -100px 0px',
+          threshold: 0.1
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed', 'is-inview');
+            }
+          });
+        }, observerOptions);
+
+        // Observe all scroll sections
+        const scrollSections = document.querySelectorAll('[data-scroll-section], [data-scroll]');
+        scrollSections.forEach((section) => {
+          revealObserver.observe(section);
+        });
+
+        // Store observer for cleanup
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
+        (locomotiveInstance as any).__mobileObserver = revealObserver;
+      }
+
       // Handle scroll event - use window scroll which works with locomotive
       function handleScroll() {
         // Get scroll position - try locomotive's scroll instance first, fallback to window
@@ -488,6 +517,13 @@ export default function Home() {
       // cleanup scroll handlers
       if (handleScrollCleanup) {
         handleScrollCleanup();
+      }
+
+      // cleanup mobile observer if it exists
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
+      if (locomotiveInstance && (locomotiveInstance as any).__mobileObserver) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-type-assertion
+        (locomotiveInstance as any).__mobileObserver.disconnect();
       }
       
       // cleanup locomotive instance if created
