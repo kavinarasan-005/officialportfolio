@@ -589,10 +589,16 @@ export default function Home() {
               }>
                 <ErrorBoundary fallback={<SplineError />}>
                   <Spline 
-                    scene="/assets/scene.splinecode"
-                    onLoad={() => console.log("Spline scene loaded successfully")}
+                    scene={typeof window !== 'undefined' ? `${window.location.origin}/assets/scene.splinecode` : "/assets/scene.splinecode"}
+                    onLoad={() => {
+                      console.log("Spline scene loaded successfully");
+                    }}
                     onError={(error) => {
                       console.error("Spline error:", error);
+                      if (typeof window !== 'undefined') {
+                        const absoluteUrl = `${window.location.protocol}//${window.location.host}/assets/scene.splinecode`;
+                        console.log("Attempting to load from:", absoluteUrl);
+                      }
                     }}
                   />
                 </ErrorBoundary>
