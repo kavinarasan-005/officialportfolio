@@ -398,10 +398,9 @@ export default function Home() {
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-link");
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let locomotiveInstance: any = null;
-      let handleScrollCleanup: (() => void) | null = null;
-      let revealObserver: IntersectionObserver | null = null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let locomotiveInstance: any = null;
+    let handleScrollCleanup: (() => void) | null = null;
 
     async function getLocomotive() {
       const Locomotive = (await import("locomotive-scroll")).default;
@@ -429,27 +428,6 @@ export default function Home() {
       // expose instance for external scroll actions (used by scrollTo helper)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as { locomotive?: any }).locomotive = loco;
-
-      // Use IntersectionObserver for mobile animations
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-      };
-
-      revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed');
-          }
-        });
-      }, observerOptions);
-
-      // Observe all scroll sections
-      const scrollSections = document.querySelectorAll('[data-scroll-section], [data-scroll]');
-      scrollSections.forEach((section) => {
-        revealObserver?.observe(section);
-      });
 
       // Handle scroll event - use window scroll which works with locomotive
       function handleScroll() {
@@ -511,12 +489,7 @@ export default function Home() {
       if (handleScrollCleanup) {
         handleScrollCleanup();
       }
-
-      // cleanup intersection observer
-      if (revealObserver) {
-        revealObserver.disconnect();
-      }
-
+      
       // cleanup locomotive instance if created
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (typeof window !== 'undefined' && (window as { locomotive?: { destroy?: () => void } }).locomotive) {
@@ -803,13 +776,7 @@ export default function Home() {
                     <Target className="mr-2 text-primary" size={20} />
                     Product & Strategy
                   </h3>
-                  <div className="relative">
-                    {/* Mobile swipe indicator */}
-                    <div className="absolute top-2 right-4 sm:hidden z-10 flex items-center gap-1 text-xs text-muted-foreground animate-pulse">
-                      <span>Swipe</span>
-                      <ChevronRight className="h-3 w-3" />
-                    </div>
-                    <Carousel setApi={setCarouselApi} className="w-full">
+                  <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {productProjects.map((project, index) => (
                         <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
@@ -855,7 +822,6 @@ export default function Home() {
                     <CarouselPrevious />
                     <CarouselNext />
                   </Carousel>
-                  </div>
                 </div>
 
                 {/* Development & Analytics Projects */}
@@ -864,13 +830,7 @@ export default function Home() {
                     <Code2 className="mr-2 text-primary" size={20} />
                     Development & Analytics
                   </h3>
-                  <div className="relative">
-                    {/* Mobile swipe indicator */}
-                    <div className="absolute top-2 right-4 sm:hidden z-10 flex items-center gap-1 text-xs text-muted-foreground animate-pulse">
-                      <span>Swipe</span>
-                      <ChevronRight className="h-3 w-3" />
-                    </div>
-                    <Carousel setApi={setCarouselApi} className="w-full">
+                  <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {developmentProjects.map((project, index) => (
                         <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
@@ -914,7 +874,6 @@ export default function Home() {
                     <CarouselPrevious />
                     <CarouselNext />
                   </Carousel>
-                  </div>
                 </div>
 
                 {/* Design & UI/UX Projects */}
@@ -923,13 +882,7 @@ export default function Home() {
                     <Frame className="mr-2 text-primary" size={20} />
                     Design & UI/UX
                   </h3>
-                  <div className="relative">
-                    {/* Mobile swipe indicator */}
-                    <div className="absolute top-2 right-4 sm:hidden z-10 flex items-center gap-1 text-xs text-muted-foreground animate-pulse">
-                      <span>Swipe</span>
-                      <ChevronRight className="h-3 w-3" />
-                    </div>
-                    <Carousel setApi={setCarouselApi} className="w-full">
+                  <Carousel setApi={setCarouselApi} className="w-full">
                     <CarouselContent>
                       {designProjects.map((project, index) => (
                         <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
@@ -973,7 +926,6 @@ export default function Home() {
                     <CarouselPrevious />
                     <CarouselNext />
                   </Carousel>
-                  </div>
                 </div>
               </div>
             </div>

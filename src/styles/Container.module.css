@@ -1,10 +1,6 @@
 /* navbar */
 .nav {
-  @apply fixed top-0 z-50 flex w-full flex-row items-center justify-between px-[1rem] py-8 2xl:px-[17rem];
-  background-color: hsl(var(--background));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid hsl(var(--border) / 0.1);
+  @apply fixed top-0 z-40 flex w-full flex-row items-center justify-between px-[1rem] py-8 2xl:px-[17rem];
 }
 .nav .desktop-nav {
   @apply hidden items-center space-x-5 text-center sm:flex;
