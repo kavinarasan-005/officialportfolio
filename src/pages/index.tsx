@@ -849,12 +849,12 @@ export default function Home() {
                                 )}
                               </Link>
                             </CardHeader>
-                            <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                              <div className="border-t border-white/5 p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="text-xs text-primary font-medium">{project.category}</span>
+                            <CardContent className="absolute bottom-0 w-full bg-background/40 backdrop-blur-sm sm:bg-background/50 sm:backdrop-blur">
+                              <div className="border-t border-white/5 p-2 sm:p-4">
+                                <div className="flex items-center justify-between mb-1 sm:mb-2">
+                                  <span className="text-[10px] sm:text-xs text-primary font-medium">{project.category}</span>
                                 </div>
-                                <CardTitle className="text-base font-normal tracking-tighter">
+                                <CardTitle className="text-xs sm:text-base font-normal tracking-tighter leading-tight sm:leading-normal">
                                   {project.description}
                                 </CardTitle>
                               </div>
@@ -908,12 +908,12 @@ export default function Home() {
                                 )}
                               </Link>
                             </CardHeader>
-                            <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                              <div className="border-t border-white/5 p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="text-xs text-primary font-medium">{project.category}</span>
+                            <CardContent className="absolute bottom-0 w-full bg-background/40 backdrop-blur-sm sm:bg-background/50 sm:backdrop-blur">
+                              <div className="border-t border-white/5 p-2 sm:p-4">
+                                <div className="flex items-center justify-between mb-1 sm:mb-2">
+                                  <span className="text-[10px] sm:text-xs text-primary font-medium">{project.category}</span>
                                 </div>
-                                <CardTitle className="text-base font-normal tracking-tighter">
+                                <CardTitle className="text-xs sm:text-base font-normal tracking-tighter leading-tight sm:leading-normal">
                                   {project.description}
                                 </CardTitle>
                               </div>
@@ -967,12 +967,12 @@ export default function Home() {
                                 )}
                               </Link>
                             </CardHeader>
-                            <CardContent className="absolute bottom-0 w-full bg-background/50 backdrop-blur">
-                              <div className="border-t border-white/5 p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="text-xs text-primary font-medium">{project.category}</span>
+                            <CardContent className="absolute bottom-0 w-full bg-background/40 backdrop-blur-sm sm:bg-background/50 sm:backdrop-blur">
+                              <div className="border-t border-white/5 p-2 sm:p-4">
+                                <div className="flex items-center justify-between mb-1 sm:mb-2">
+                                  <span className="text-[10px] sm:text-xs text-primary font-medium">{project.category}</span>
                                 </div>
-                                <CardTitle className="text-base font-normal tracking-tighter">
+                                <CardTitle className="text-xs sm:text-base font-normal tracking-tighter leading-tight sm:leading-normal">
                                   {project.description}
                                 </CardTitle>
                               </div>
