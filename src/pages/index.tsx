@@ -834,7 +834,7 @@ export default function Home() {
                                     loop
                                     muted
                                     playsInline
-                                    preload="none"
+                                    preload="metadata"
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill"
                                   />
                                 ) : (
@@ -894,6 +894,8 @@ export default function Home() {
                                     autoPlay
                                     loop
                                     muted
+                                    playsInline
+                                    preload="metadata"
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
                                   />
                                 ) : (
@@ -953,6 +955,8 @@ export default function Home() {
                                     autoPlay
                                     loop
                                     muted
+                                    playsInline
+                                    preload="metadata"
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
                                   />
                                 ) : (
