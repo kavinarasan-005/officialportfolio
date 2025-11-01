@@ -3,6 +3,7 @@ import { useEffect, useRef, Suspense, useState } from "react";
 import styles from "@/styles/Home.module.css";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Dynamically import Spline with no SSR
 const Spline = dynamic(() => import("@splinetool/react-spline").then(mod => mod.default), {
@@ -13,6 +14,16 @@ const Spline = dynamic(() => import("@splinetool/react-spline").then(mod => mod.
     </div>
   )
 });
+
+// Error fallback component
+const SplineError = () => (
+  <div className="flex items-center justify-center h-full min-h-[400px]">
+    <div className="text-center">
+      <p className="text-muted-foreground mb-2">3D scene unavailable</p>
+      <p className="text-xs text-muted-foreground/70">Please refresh the page</p>
+    </div>
+  </div>
+);
 import {
   ChevronRight,
   Code2,
@@ -576,10 +587,15 @@ export default function Home() {
                   <span className="text-muted-foreground">Loading 3D scene...</span>
                 </div>
               }>
-                <Spline 
-                  scene="/assets/scene.splinecode" 
-                  onError={(error) => console.error("Spline error:", error)}
-                />
+                <ErrorBoundary fallback={<SplineError />}>
+                  <Spline 
+                    scene="/assets/scene.splinecode"
+                    onLoad={() => console.log("Spline scene loaded successfully")}
+                    onError={(error) => {
+                      console.error("Spline error:", error);
+                    }}
+                  />
+                </ErrorBoundary>
               </Suspense>
             </div>
           </section>

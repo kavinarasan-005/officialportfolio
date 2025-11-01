@@ -22,6 +22,23 @@ const config = withPWA({
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
           },
+          {
+            key: 'Content-Type',
+            value: 'application/octet-stream',
+          },
+        ],
+      },
+      {
+        source: '/assets/:path*.splinecode',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/octet-stream',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
         ],
       },
     ];
