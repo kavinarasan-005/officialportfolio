@@ -385,16 +385,45 @@ export default function Home() {
   const [current, setCurrent] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [splineScene, setSplineScene] = useState<string>("/assets/scene.splinecode");
+  const [shouldLoadSpline, setShouldLoadSpline] = useState<boolean>(false);
+  const [isPageReady, setIsPageReady] = useState<boolean>(false);
 
-  // Set absolute URL for Spline scene in production
+  // Set absolute URL for Spline scene and defer loading until page is ready
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setSplineScene(`${window.location.origin}/assets/scene.splinecode`);
+      
+      // Mark page as ready after initial render
+      setIsPageReady(true);
+      
+      // Defer 3D scene loading - load after initial paint or user interaction
+      const loadSplineAfterDelay = () => {
+        // Use requestIdleCallback if available, otherwise use setTimeout
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            setShouldLoadSpline(true);
+          }, { timeout: 1000 });
+        } else {
+          setTimeout(() => {
+            setShouldLoadSpline(true);
+          }, 500);
+        }
+      };
+      
+      // Load Spline after page is interactive
+      if (document.readyState === 'complete') {
+        loadSplineAfterDelay();
+      } else {
+        window.addEventListener('load', loadSplineAfterDelay);
+        return () => window.removeEventListener('load', loadSplineAfterDelay);
+      }
     }
   }, []);
 
-  // handle scroll
+  // handle scroll - defer initialization until page is ready
   useEffect(() => {
+    if (!isPageReady) return;
+    
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-link");
 
@@ -403,6 +432,14 @@ export default function Home() {
     let handleScrollCleanup: (() => void) | null = null;
 
     async function getLocomotive() {
+      // Defer locomotive-scroll loading to not block initial render
+      await new Promise(resolve => {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(resolve, { timeout: 2000 });
+        } else {
+          setTimeout(resolve, 300);
+        }
+      });
       const Locomotive = (await import("locomotive-scroll")).default;
       const loco = new Locomotive({
         el: refScrollContainer.current ?? new HTMLElement(),
@@ -540,7 +577,7 @@ export default function Home() {
         delete (window as { locomotive?: any }).locomotive;
       }
     };
-  }, []);
+  }, [isPageReady]);
 
   useEffect(() => {
     if (!carouselApi) return;
@@ -553,21 +590,35 @@ export default function Home() {
     });
   }, [carouselApi]);
 
-  // card hover effect
+  // card hover effect - defer initialization until page is ready
   useEffect(() => {
-    const tilt: HTMLElement[] = Array.from(document.querySelectorAll("#tilt"));
-    VanillaTilt.init(tilt, {
-      speed: 400, // Increased for smoother transitions
-      glare: false,
-      gyroscope: false,
-      perspective: 1000, // Increased for more subtle effect
-      scale: 1.02, // Slightly more noticeable scale
-      transition: true,
-      max: 5, // Increased tilt angle
-      reset: true,
-      easing: "cubic-bezier(.03,.98,.52,.99)", // Smooth easing
-    });
-  }, []);
+    if (!isPageReady) return;
+    
+    // Defer tilt initialization to not block initial render
+    const initTilt = () => {
+      const tilt: HTMLElement[] = Array.from(document.querySelectorAll("#tilt"));
+      if (tilt.length > 0) {
+        VanillaTilt.init(tilt, {
+          speed: 400, // Increased for smoother transitions
+          glare: false,
+          gyroscope: false,
+          perspective: 1000, // Increased for more subtle effect
+          scale: 1.02, // Slightly more noticeable scale
+          transition: true,
+          max: 5, // Increased tilt angle
+          reset: true,
+          easing: "cubic-bezier(.03,.98,.52,.99)", // Smooth easing
+        });
+      }
+    };
+    
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(initTilt, { timeout: 2000 });
+    } else {
+      setTimeout(initTilt, 500);
+    }
+  }, [isPageReady]);
 
   return (
     <Container>
@@ -628,24 +679,35 @@ export default function Home() {
               id={styles["canvas-container"]}
               className="mt-8 sm:mt-12 md:mt-14 h-[300px] sm:h-[400px] md:h-[450px] w-full xl:mt-0 xl:h-[515px]"
             >
-              <Suspense fallback={
-                <div className="flex items-center justify-center h-full min-h-[400px]">
-                  <span className="text-muted-foreground">Loading 3D scene...</span>
+              {shouldLoadSpline ? (
+                <Suspense fallback={
+                  <div className="flex items-center justify-center h-full min-h-[400px]">
+                    <div className="animate-pulse">
+                      <span className="text-muted-foreground text-sm">Loading 3D scene...</span>
+                    </div>
+                  </div>
+                }>
+                  <ErrorBoundary fallback={<SplineError />}>
+                    <Spline 
+                      scene={splineScene}
+                      onLoad={() => {
+                        console.log("Spline scene loaded successfully");
+                      }}
+                      onError={(error) => {
+                        console.error("Spline error:", error);
+                        console.log("Attempting to load from:", splineScene);
+                      }}
+                    />
+                  </ErrorBoundary>
+                </Suspense>
+              ) : (
+                <div className="flex items-center justify-center h-full min-h-[400px] bg-background/20 rounded-2xl sm:rounded-3xl border border-border/50">
+                  <div className="text-center">
+                    <div className="inline-block h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <p className="text-xs text-muted-foreground">Preparing 3D scene...</p>
+                  </div>
                 </div>
-              }>
-                <ErrorBoundary fallback={<SplineError />}>
-                  <Spline 
-                    scene={splineScene}
-                    onLoad={() => {
-                      console.log("Spline scene loaded successfully");
-                    }}
-                    onError={(error) => {
-                      console.error("Spline error:", error);
-                      console.log("Attempting to load from:", splineScene);
-                    }}
-                  />
-                </ErrorBoundary>
-              </Suspense>
+              )}
             </div>
           </section>
 

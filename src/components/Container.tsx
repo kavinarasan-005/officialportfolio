@@ -115,13 +115,18 @@ export default function Container(props: ContainerProps) {
     };
   }, []);
 
-  // preloader effect
+  // preloader effect - reduced time for faster initial load
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-      document.body.style.cursor = "default";
-      window.scrollTo(0, 0);
-    }, 2000);
+    // Reduce preloader time and use requestAnimationFrame for smoother transition
+    const timer = requestAnimationFrame(() => {
+      setTimeout(() => {
+        setIsLoading(false);
+        document.body.style.cursor = "default";
+        window.scrollTo(0, 0);
+      }, 1200); // Reduced from 2000ms to 1200ms
+    });
+    
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   return (
@@ -154,6 +159,10 @@ export default function Container(props: ContainerProps) {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=3" />
         <link rel="shortcut icon" type="image/png" href="/favicon.png?v=3" />
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=3" />
+        {/* Preload critical fonts */}
+        <link rel="preload" href="/fonts/ClashGrotesk-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Prefetch Spline scene for faster loading after initial render */}
+        <link rel="prefetch" href="/assets/scene.splinecode" as="fetch" crossOrigin="anonymous" />
       </Head>
       <nav
         className={cn(

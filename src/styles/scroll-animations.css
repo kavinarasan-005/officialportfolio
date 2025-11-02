@@ -19,14 +19,14 @@ html.is-revealed [data-scroll] {
   opacity: 1;
 }
 
-/* Mobile-specific animations */
+/* Mobile-specific animations - optimized for performance */
 @media (max-width: 1024px) {
   /* Initial hidden state on mobile only */
   [data-scroll-section],
   [data-scroll] {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, opacity;
   }
   
@@ -35,12 +35,14 @@ html.is-revealed [data-scroll] {
   [data-scroll-section].is-inview {
     opacity: 1;
     transform: translateY(0);
+    will-change: auto; /* Remove will-change after animation to save resources */
   }
   
   [data-scroll].is-revealed,
   [data-scroll].is-inview {
     opacity: 1;
     transform: translateY(0);
+    will-change: auto;
   }
 }
 
