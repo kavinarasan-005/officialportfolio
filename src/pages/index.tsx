@@ -83,8 +83,14 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import VanillaTilt from "vanilla-tilt";
-import { motion } from "framer-motion";
+// Lazy load heavy dependencies
+let VanillaTilt: typeof import("vanilla-tilt").default | null = null;
+const loadVanillaTilt = async () => {
+  if (!VanillaTilt) {
+    VanillaTilt = (await import("vanilla-tilt")).default;
+  }
+  return VanillaTilt;
+};
 
 const aboutStats = [
   { label: "Years of Experience", value: "2+" },
@@ -387,6 +393,7 @@ export default function Home() {
   const [splineScene, setSplineScene] = useState<string>("/assets/scene.splinecode");
   const [shouldLoadSpline, setShouldLoadSpline] = useState<boolean>(false);
   const [isPageReady, setIsPageReady] = useState<boolean>(false);
+  const [visibleVideos, setVisibleVideos] = useState<Set<string>>(new Set());
 
   // Set absolute URL for Spline scene and defer loading until page is ready
   useEffect(() => {
@@ -396,29 +403,84 @@ export default function Home() {
       // Mark page as ready after initial render
       setIsPageReady(true);
       
-      // Defer 3D scene loading - load after initial paint or user interaction
+      // Defer 3D scene loading - wait for user interaction or longer delay
       const loadSplineAfterDelay = () => {
-        // Use requestIdleCallback if available, otherwise use setTimeout
+        // Use requestIdleCallback with longer timeout - load only when really idle
         if ('requestIdleCallback' in window) {
           requestIdleCallback(() => {
             setShouldLoadSpline(true);
-          }, { timeout: 1000 });
+          }, { timeout: 3000 }); // Increased timeout - load only when truly idle
         } else {
           setTimeout(() => {
             setShouldLoadSpline(true);
-          }, 500);
+          }, 2000); // Increased delay for non-supporting browsers
         }
       };
       
-      // Load Spline after page is interactive
+      // Load Spline on user interaction (scroll, click, etc.) or after delay
+      let hasInteracted = false;
+      const onUserInteraction = () => {
+        if (!hasInteracted) {
+          hasInteracted = true;
+          loadSplineAfterDelay();
+          window.removeEventListener('scroll', onUserInteraction);
+          window.removeEventListener('click', onUserInteraction);
+          window.removeEventListener('touchstart', onUserInteraction);
+        }
+      };
+      
+      // Listen for user interactions
+      const scrollOptions = { passive: true, once: true };
+      const touchOptions = { passive: true, once: true };
+      window.addEventListener('scroll', onUserInteraction, scrollOptions);
+      window.addEventListener('click', onUserInteraction, { once: true });
+      window.addEventListener('touchstart', onUserInteraction, touchOptions);
+      
+      // Also load after longer delay even without interaction
       if (document.readyState === 'complete') {
-        loadSplineAfterDelay();
+        setTimeout(loadSplineAfterDelay, 2500);
       } else {
-        window.addEventListener('load', loadSplineAfterDelay);
-        return () => window.removeEventListener('load', loadSplineAfterDelay);
+        window.addEventListener('load', () => setTimeout(loadSplineAfterDelay, 2500));
+        return () => {
+          window.removeEventListener('load', loadSplineAfterDelay);
+          window.removeEventListener('scroll', onUserInteraction);
+          window.removeEventListener('click', onUserInteraction);
+          window.removeEventListener('touchstart', onUserInteraction);
+        };
       }
     }
   }, []);
+
+  // Lazy load videos when they become visible
+  useEffect(() => {
+    if (!isPageReady) return;
+
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const video = entry.target as HTMLVideoElement;
+          const src = video.getAttribute('data-src');
+          if (src && !visibleVideos.has(src)) {
+            setVisibleVideos((prev) => new Set([...prev, src]));
+            video.src = src;
+            video.load(); // Force video to start loading
+          }
+          videoObserver.unobserve(video);
+        }
+      });
+    }, {
+      rootMargin: '50px', // Start loading 50px before video enters viewport
+    });
+
+    // Observe all videos with data-src attribute
+    const videos = document.querySelectorAll('video[data-src]');
+    videos.forEach((video) => videoObserver.observe(video));
+
+    return () => {
+      videos.forEach((video) => videoObserver.unobserve(video));
+      videoObserver.disconnect();
+    };
+  }, [isPageReady, visibleVideos]);
 
   // handle scroll - defer initialization until page is ready
   useEffect(() => {
@@ -432,12 +494,12 @@ export default function Home() {
     let handleScrollCleanup: (() => void) | null = null;
 
     async function getLocomotive() {
-      // Defer locomotive-scroll loading to not block initial render
+      // Defer locomotive-scroll loading significantly to not block initial render
       await new Promise(resolve => {
         if ('requestIdleCallback' in window) {
-          requestIdleCallback(resolve, { timeout: 2000 });
+          requestIdleCallback(resolve, { timeout: 4000 }); // Increased timeout - load only when really idle
         } else {
-          setTimeout(resolve, 300);
+          setTimeout(resolve, 1500); // Increased delay for non-supporting browsers
         }
       });
       const Locomotive = (await import("locomotive-scroll")).default;
@@ -595,10 +657,12 @@ export default function Home() {
     if (!isPageReady) return;
     
     // Defer tilt initialization to not block initial render
-    const initTilt = () => {
+    const initTilt = async () => {
+      // Lazy load VanillaTilt
+      const Tilt = await loadVanillaTilt();
       const tilt: HTMLElement[] = Array.from(document.querySelectorAll("#tilt"));
-      if (tilt.length > 0) {
-        VanillaTilt.init(tilt, {
+      if (tilt.length > 0 && Tilt) {
+        Tilt.init(tilt, {
           speed: 400, // Increased for smoother transitions
           glare: false,
           gyroscope: false,
@@ -614,9 +678,13 @@ export default function Home() {
     
     // Use requestIdleCallback if available, otherwise setTimeout
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(initTilt, { timeout: 2000 });
+      requestIdleCallback(() => {
+        void initTilt();
+      }, { timeout: 2000 });
     } else {
-      setTimeout(initTilt, 500);
+      setTimeout(() => {
+        void initTilt();
+      }, 500);
     }
   }, [isPageReady]);
 
@@ -891,12 +959,13 @@ export default function Home() {
                               <Link href={project.href} target="_blank" passHref>
                                 {project.image.endsWith(".webm") ? (
                                   <video
-                                    src={project.image}
-                                    autoPlay
+                                    data-src={project.image}
+                                    src={visibleVideos.has(project.image) ? project.image : undefined}
+                                    autoPlay={visibleVideos.has(project.image)}
                                     loop
                                     muted
                                     playsInline
-                                    preload="metadata"
+                                    preload="none"
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill"
                                   />
                                 ) : (
@@ -957,7 +1026,7 @@ export default function Home() {
                                     loop
                                     muted
                                     playsInline
-                                    preload="metadata"
+                                    preload="none"
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
                                   />
                                 ) : (
@@ -1018,7 +1087,7 @@ export default function Home() {
                                     loop
                                     muted
                                     playsInline
-                                    preload="metadata"
+                                    preload="none"
                                     className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
                                   />
                                 ) : (

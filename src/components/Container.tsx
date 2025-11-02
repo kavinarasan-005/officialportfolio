@@ -123,7 +123,7 @@ export default function Container(props: ContainerProps) {
         setIsLoading(false);
         document.body.style.cursor = "default";
         window.scrollTo(0, 0);
-      }, 1200); // Reduced from 2000ms to 1200ms
+      }, 800); // Reduced from 2000ms to 800ms for faster initial load
     });
     
     return () => cancelAnimationFrame(timer);
