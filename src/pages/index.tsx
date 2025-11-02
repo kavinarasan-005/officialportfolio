@@ -403,51 +403,83 @@ export default function Home() {
       // Mark page as ready after initial render
       setIsPageReady(true);
       
-      // Defer 3D scene loading - wait for user interaction or longer delay
-      const loadSplineAfterDelay = () => {
-        // Use requestIdleCallback with longer timeout - load only when really idle
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(() => {
-            setShouldLoadSpline(true);
-          }, { timeout: 3000 }); // Increased timeout - load only when truly idle
-        } else {
-          setTimeout(() => {
-            setShouldLoadSpline(true);
-          }, 2000); // Increased delay for non-supporting browsers
+      // Load 3D scene ONLY when hero section is visible in viewport
+      // This prevents loading if user scrolls past quickly
+      const setupHeroObserver = () => {
+        const canvasContainerId = styles["canvas-container"];
+        if (!canvasContainerId) return null;
+        const heroContainer = document.getElementById(canvasContainerId);
+        if (heroContainer) {
+          const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+                // Hero section is visible - load after idle time
+                if ('requestIdleCallback' in window) {
+                  requestIdleCallback(() => {
+                    setShouldLoadSpline(true);
+                  }, { timeout: 2000 });
+                } else {
+                  setTimeout(() => {
+                    setShouldLoadSpline(true);
+                  }, 1000);
+                }
+                heroObserver.disconnect(); // Stop observing once triggered
+              }
+            });
+          }, {
+            threshold: [0.3], // Trigger when 30% of hero section is visible
+            rootMargin: '100px', // Start checking 100px before it enters viewport
+          });
+
+          heroObserver.observe(heroContainer);
+
+          // Also load after very long delay as fallback (only if still on page)
+          const fallbackTimer = setTimeout(() => {
+            heroObserver.disconnect();
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(() => {
+                setShouldLoadSpline(true);
+              }, { timeout: 2000 });
+            } else {
+              setShouldLoadSpline(true);
+            }
+          }, 8000); // 8 second fallback - very conservative
+
+          return () => {
+            heroObserver.disconnect();
+            clearTimeout(fallbackTimer);
+          };
         }
+        return null;
       };
-      
-      // Load Spline on user interaction (scroll, click, etc.) or after delay
-      let hasInteracted = false;
-      const onUserInteraction = () => {
-        if (!hasInteracted) {
-          hasInteracted = true;
-          loadSplineAfterDelay();
-          window.removeEventListener('scroll', onUserInteraction);
-          window.removeEventListener('click', onUserInteraction);
-          window.removeEventListener('touchstart', onUserInteraction);
-        }
-      };
-      
-      // Listen for user interactions
-      const scrollOptions = { passive: true, once: true };
-      const touchOptions = { passive: true, once: true };
-      window.addEventListener('scroll', onUserInteraction, scrollOptions);
-      window.addEventListener('click', onUserInteraction, { once: true });
-      window.addEventListener('touchstart', onUserInteraction, touchOptions);
-      
-      // Also load after longer delay even without interaction
-      if (document.readyState === 'complete') {
-        setTimeout(loadSplineAfterDelay, 2500);
+
+      // Wait for DOM to be ready, then set up observer
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupHeroObserver);
       } else {
-        window.addEventListener('load', () => setTimeout(loadSplineAfterDelay, 2500));
-        return () => {
-          window.removeEventListener('load', loadSplineAfterDelay);
-          window.removeEventListener('scroll', onUserInteraction);
-          window.removeEventListener('click', onUserInteraction);
-          window.removeEventListener('touchstart', onUserInteraction);
-        };
+        // DOM already ready, but wait a tick for React to render
+        setTimeout(setupHeroObserver, 100);
       }
+
+      // Fallback if container not found - delay significantly
+      const fallbackTimer = setTimeout(() => {
+        if (!shouldLoadSpline) {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+              setShouldLoadSpline(true);
+            }, { timeout: 3000 });
+          } else {
+            setTimeout(() => {
+              setShouldLoadSpline(true);
+            }, 5000);
+          }
+        }
+      }, 10000); // 10 second fallback
+
+      return () => {
+        clearTimeout(fallbackTimer);
+        document.removeEventListener('DOMContentLoaded', setupHeroObserver);
+      };
     }
   }, []);
 
