@@ -384,9 +384,25 @@ export default function Home() {
     }
   }, []);
 
-  // Optimized lazy load videos with better performance
+  // Aggressively optimized video loading - start loading immediately
   useEffect(() => {
     if (!isPageReady) return;
+
+    // Prefetch first few videos immediately (above the fold)
+    const allVideoSources = [
+      ...productProjects.map(p => p.image),
+      ...developmentProjects.map(p => p.image),
+      ...designProjects.map(p => p.image),
+    ].filter(src => src.endsWith('.webm'));
+
+    // Prefetch first 3 videos immediately
+    allVideoSources.slice(0, 3).forEach(src => {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = src;
+      link.as = 'video';
+      document.head.appendChild(link);
+    });
 
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -396,26 +412,18 @@ export default function Home() {
           if (src && !visibleVideos.has(src)) {
             setVisibleVideos((prev) => new Set([...prev, src]));
             
-            // Preload video metadata first (lightweight)
-            video.preload = 'metadata';
+            // Load video immediately when visible
+            video.preload = 'auto';
             video.src = src;
-            
-            // Load video in the background, don't autoplay until user interaction or visible
             video.load();
-            
-            // Only play when user hovers or clicks (save bandwidth)
-            const handleCanPlay = () => {
-              video.removeEventListener('canplay', handleCanPlay);
-            };
-            video.addEventListener('canplay', handleCanPlay);
             
             videoObserver.unobserve(video);
           }
         }
       });
     }, {
-      rootMargin: '100px', // Start loading earlier
-      threshold: 0.1, // Trigger when 10% visible
+      rootMargin: '200px', // Start loading much earlier (200px before viewport)
+      threshold: 0.01, // Trigger as soon as any part is visible
     });
 
     // Observe all videos with data-src attribute
@@ -516,10 +524,13 @@ export default function Home() {
       }, revealObserverOptions);
 
       // Observe all sections for reveal animations
-      sections.forEach((section) => {
+      sections.forEach((section, index) => {
         revealObserver.observe(section);
-        // Immediately add reveal class to make sections visible on page load
-        section.classList.add('reveal');
+        // Immediately add reveal class to first 2 sections (above fold) for instant visibility
+        // Other sections will reveal on scroll for better performance
+        if (index < 2) {
+          section.classList.add('reveal');
+        }
       });
 
       // Track scroll position for navbar background and nav highlighting

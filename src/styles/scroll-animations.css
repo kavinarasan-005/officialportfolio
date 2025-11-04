@@ -1,23 +1,23 @@
-/* Chronicle-style smooth scroll animations */
+/* Chronicle-style smooth scroll animations - optimized for performance */
 
-/* Sections are visible by default - only animate on scroll */
+/* Sections are visible immediately - no initial hidden state */
 section {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Faster, lighter transitions */
+  transition: opacity 0.4s ease-out, 
+              transform 0.4s ease-out;
 }
 
-/* Optional: Subtle fade-in effect for sections below the fold */
-section:not(:first-of-type) {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Revealed class for smooth scroll-in animation (optional enhancement) */
+/* Revealed class for smooth scroll-in animation */
 section.reveal {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Disable transitions on initial load for instant visibility */
+section:first-of-type {
+  transition: none;
 }
 
 /* Respect reduced motion preference */

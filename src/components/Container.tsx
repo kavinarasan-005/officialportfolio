@@ -304,23 +304,26 @@ export default function Container(props: ContainerProps) {
         `}</style>
       </nav>
 
-      {/* Preloader */}
-      {isLoading && <Preloader />}
+      {/* Preloader - higher z-index */}
+      {isLoading && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999 }}>
+          <Preloader />
+        </div>
+      )}
 
       {/* Curtain reveal animation after preloader */}
-      <div 
-        className={cn(
-          "fixed inset-0 z-[9998] pointer-events-none",
-          "bg-background transition-opacity duration-1000 ease-out",
-          isLoading ? "opacity-100" : "opacity-0"
-        )}
-        style={{
-          clipPath: isLoading 
-            ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' 
-            : 'polygon(0 0, 100% 0, 100% 0, 0 0)',
-          transition: 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.8s ease-out',
-        }}
-      />
+      {!isLoading && (
+        <div 
+          className={cn(
+            "fixed inset-0 z-[9998] pointer-events-none",
+            "bg-background"
+          )}
+          style={{
+            clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+            animation: 'curtainReveal 1.2s cubic-bezier(0.76, 0, 0.24, 1) forwards',
+          }}
+        />
+      )}
 
       {/* Main content with fade-in */}
       <main 
