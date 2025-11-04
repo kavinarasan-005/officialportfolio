@@ -440,10 +440,10 @@ export default function Home() {
             setVisibleVideos((prev) => new Set([...prev, src]));
             video.preload = 'auto';
             video.src = src;
-            
+
             // Load and play video when ready
             video.load();
-            
+
             // Auto-play when video can play
             const handleCanPlay = () => {
               video.play().catch(() => {
@@ -706,40 +706,39 @@ export default function Home() {
         {/* Hero Section */}
         <section
           id="home"
-          className="min-h-screen flex w-full flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 xl:flex-row xl:justify-between max-w-7xl mx-auto"
+          className="min-h-screen flex w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24 xl:flex-row xl:justify-between xl:items-center max-w-7xl mx-auto gap-8 sm:gap-10 md:gap-12 xl:gap-16"
         >
-          <div className={styles.intro}>
-            <div className="flex flex-row flex-wrap items-center gap-1.5">
+          <div className={cn(styles.intro, "w-full xl:w-auto xl:max-w-2xl")}>
+            <div className="flex flex-row flex-wrap items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
               <span className={styles.pill}>Product</span>
               <span className={styles.pill}>Analytics</span>
               <span className={styles.pill}>Development</span>
             </div>
-            <div>
-              <h1>
-                <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-foreground 2xl:text-8xl">
+            <div className="w-full">
+              <h1 className="space-y-1 sm:space-y-2">
+                <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl tracking-tighter text-foreground leading-tight">
                   Hi, I&apos;m Kavin Arasan
-                  <br />
                 </span>
-                <span className="clash-grotesk text-gradient text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-8xl">
+                <span className="block clash-grotesk text-gradient text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl leading-tight">
                   Product & Data Analyst
                 </span>
               </h1>
-              <p className="mt-1 max-w-lg text-sm sm:text-base md:text-lg tracking-tight text-muted-foreground 2xl:text-xl">
+              <p className="mt-3 sm:mt-4 max-w-lg text-xs sm:text-sm md:text-base lg:text-lg tracking-tight text-muted-foreground leading-relaxed">
                 Passionate about turning data into decisions and insights into products. Building dashboards that uncover hidden trends and designing user experiences that drive behavior.
               </p>
             </div>
-            <span className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-1.5 pt-6 w-full sm:w-auto">
-              <Button onClick={() => scrollTo("#contact")} className="w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2.5 mt-6 sm:mt-8 w-full sm:w-auto">
+              <Button onClick={() => scrollTo("#contact")} className="w-full sm:w-auto text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3">
                 Get in touch <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
               <Button
                 variant="outline"
                 onClick={() => scrollTo("#about")}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3"
               >
                 Learn More
               </Button>
-            </span>
+            </div>
 
             <div
               className={cn(
@@ -753,7 +752,7 @@ export default function Home() {
           </div>
           <div
             id={styles["canvas-container"]}
-            className="mt-8 sm:mt-12 md:mt-14 h-[300px] sm:h-[400px] md:h-[450px] w-full xl:mt-0 xl:h-[515px] relative overflow-hidden rounded-2xl"
+            className="w-full h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[515px] xl:mt-0 relative overflow-hidden rounded-xl sm:rounded-2xl"
           >
             {/* 3D Data Visualization - Pure CSS */}
             <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden">
@@ -799,21 +798,21 @@ export default function Home() {
         </section>
 
         {/* About */}
-        <section id="about" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
-          <div className="flex max-w-6xl mx-auto flex-col justify-start space-y-8 sm:space-y-10">
-            <h2 className="py-4 sm:py-8 pb-2 text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-normal text-foreground xl:text-5xl">
+        <section id="about" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="flex max-w-6xl mx-auto flex-col justify-start space-y-6 sm:space-y-8 md:space-y-10">
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl tracking-tighter leading-relaxed text-foreground">
               Currently pursuing B.Tech. in Computer Science at ABV-IIITM Gwalior and seeking internships in Product, Analytics, and Development starting January 2026. I enjoy collaborating across business and tech to make measurable impact through data-driven insights.
             </h2>
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 xl:grid-cols-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:grid-cols-3">
               {aboutStats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="flex flex-col items-center text-center xl:items-start xl:text-start"
+                  className="flex flex-col items-center text-center sm:items-start sm:text-start space-y-1 sm:space-y-2"
                 >
-                  <span className="clash-grotesk text-gradient text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight xl:text-6xl">
+                  <span className="clash-grotesk text-gradient text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-semibold tracking-tight">
                     {stat.value}
                   </span>
-                  <span className="tracking-tight text-xs sm:text-sm text-muted-foreground xl:text-lg">
+                  <span className="tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-muted-foreground">
                     {stat.label}
                   </span>
                 </div>
@@ -823,32 +822,32 @@ export default function Home() {
         </section>
 
         {/* Core Technologies */}
-        <section id="technologies" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+        <section id="technologies" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="flex flex-col justify-start space-y-6 sm:space-y-8 max-w-7xl mx-auto">
-            <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
-              <div className="flex flex-col justify-center py-6 xl:p-6">
-                <h2 className="text-3xl sm:text-4xl tracking-tighter">
+            <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 md:grid-cols-2 xl:grid-cols-3">
+              <div className="flex flex-col justify-center py-4 sm:py-6 xl:p-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-tight">
                   Core
                   <br />
                   <span className="text-gradient clash-grotesk">
                     Skills
                   </span>
                 </h2>
-                <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base tracking-tight text-secondary-foreground leading-relaxed">
                   My expertise spans product management, data analytics, and full-stack development.
                 </p>
               </div>
               {coreTechnologies.map((tech) => (
                 <div
                   key={tech.title}
-                  className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20"
+                  className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20"
                 >
                   <div className="flex flex-col items-start w-full">
-                    <tech.icon className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" size={24} />
-                    <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                    <tech.icon className="mb-4 sm:mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" size={20} />
+                    <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2 sm:mb-3">
                       {tech.title}
                     </span>
-                    <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed">
+                    <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed">
                       {tech.description}
                     </span>
                   </div>
@@ -859,55 +858,55 @@ export default function Home() {
         </section>
 
         {/* Experience */}
-        <section id="experience" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+        <section id="experience" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="mb-4 sm:mb-6 max-w-7xl mx-auto">
             <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
               ✨ Recent Experience
             </span>
-            <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
+            <h2 className="mt-2 sm:mt-3 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl tracking-tighter leading-tight">
               Professional{" "}
               <span className="text-gradient clash-grotesk">Experience.</span>
             </h2>
-            <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
+            <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base lg:text-lg tracking-tight text-muted-foreground leading-relaxed">
               Recent internships and freelance work in technology and product development.
             </p>
 
-            <div className="mt-6 sm:mt-8 grid items-stretch gap-6 md:grid-cols-2">
+            <div className="mt-6 sm:mt-8 grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2">
               {/* IT Intern - Eros Group */}
-              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+              <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
-                  <Building className="mb-6 text-primary transition-transform duration-300 group-hover:scale-110" size={24} />
-                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-2">
+                  <Building className="mb-4 sm:mb-6 text-primary transition-transform duration-300 group-hover:scale-110" size={20} />
+                  <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2">
                     IT Intern — Eros Group
                   </span>
-                  <span className="text-xs text-primary font-medium mb-4">
+                  <span className="text-xs sm:text-sm text-primary font-medium mb-3 sm:mb-4">
                     May 2025 – July 2025 | Dubai, UAE
                   </span>
-                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                  <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     Led IT service desk analytics for 1,000+ requests, developing Power BI dashboards for senior leadership. Built 3 ERP modules using C# and .NET, collaborating with operations teams.
                   </span>
                 </div>
-                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full">
                   Data Analytics • ERP Development • Process Automation
                 </div>
               </div>
 
               {/* Frontend Developer - LUMINTRIQAI */}
               <Link href="https://www.figma.com/design/Wz2EkcZVY47SggKG6SnTMU/Actual-Page?node-id=0-1&t=hp6ZNFdTmxFTqoaL-1" target="_blank" className="group block h-full">
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20 h-full">
+                <div className="flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20 h-full">
                   <div className="flex flex-col items-start w-full">
-                    <Code2 className="mb-6 text-primary transition-transform duration-300 group-hover:scale-110" size={24} />
-                    <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-2">
+                    <Code2 className="mb-4 sm:mb-6 text-primary transition-transform duration-300 group-hover:scale-110" size={20} />
+                    <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2">
                       Frontend Developer — LUMINTRIQAI
                     </span>
-                    <span className="text-xs text-primary font-medium mb-4">
+                    <span className="text-xs sm:text-sm text-primary font-medium mb-3 sm:mb-4">
                       Mar 2025 – Apr 2025 | Remote
                     </span>
-                    <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                    <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                       Developed and deployed a responsive React.js landing page for an AI consulting platform, integrating dynamic components and delivering pixel-perfect UI from Figma designs.
                     </span>
                   </div>
-                  <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full flex items-center transition-transform duration-300 group-hover:translate-x-1">
+                  <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full flex items-center transition-transform duration-300 group-hover:translate-x-1">
                     View Project <ChevronRight className="ml-1 h-3 w-3" />
                   </div>
                 </div>
@@ -917,11 +916,11 @@ export default function Home() {
         </section>
 
         {/* Projects */}
-        <section id="projects" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+        <section id="projects" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           {/* Gradient */}
           <div className="relative isolate -z-10">
             <div
-              className="absolute inset-x-0 -top-40 transform-gpu overflow-hidden blur-[100px] sm:-top-80 lg:-top-60"
+              className="absolute inset-x-0 -top-20 sm:-top-40 md:-top-60 lg:-top-80 transform-gpu overflow-hidden blur-[100px]"
               aria-hidden="true"
             >
               <div
@@ -937,20 +936,20 @@ export default function Home() {
             <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
               ✨ Featured Projects
             </span>
-            <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
+            <h2 className="mt-2 sm:mt-3 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl tracking-tighter leading-tight">
               Product & Analytics Portfolio.
             </h2>
-            <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
+            <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base lg:text-lg tracking-tight text-muted-foreground leading-relaxed">
               A showcase of my work in product management, data analytics, and full-stack development with measurable impact.
             </p>
 
             {/* Carousel */}
-            <div className="mt-8 sm:mt-10 space-y-8 sm:space-y-10">
+            <div className="mt-6 sm:mt-8 md:mt-10 space-y-6 sm:space-y-8 md:space-y-10">
               {/* Product & Strategy Projects */}
               <div>
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
-                    <Target className="mr-2 text-primary" size={20} />
+                <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                  <h3 className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground flex items-center">
+                    <Target className="mr-2 text-primary" size={18} />
                     Product & Strategy
                   </h3>
                   {/* Mobile swipe indicator */}
@@ -960,9 +959,9 @@ export default function Home() {
                   </div>
                 </div>
                 <Carousel setApi={setCarouselApi} className="w-full">
-                  <CarouselContent>
+                  <CarouselContent className="-ml-2 sm:-ml-4">
                     {productProjects.map((project, index) => (
-                      <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
+                      <CarouselItem key={index} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 md:basis-1/3">
                         <Card id="tilt" className="group overflow-hidden">
                           <CardHeader className="p-0 relative">
                             <Link href={project.href} target="_blank" passHref>
@@ -1013,9 +1012,9 @@ export default function Home() {
                             </Link>
                           </CardHeader>
                           <CardContent className="absolute bottom-0 w-full bg-gradient-to-t from-background/90 via-background/60 to-transparent backdrop-blur-sm transition-all duration-300 group-hover:from-background/95">
-                            <div className="p-2 sm:p-3">
-                              <span className="text-[9px] sm:text-[10px] text-primary font-medium uppercase tracking-wide">{project.category}</span>
-                              <CardTitle className="text-[10px] sm:text-xs font-normal tracking-tight leading-tight mt-0.5 line-clamp-2">
+                            <div className="p-2.5 sm:p-3 md:p-4">
+                              <span className="text-[10px] sm:text-xs text-primary font-medium uppercase tracking-wide">{project.category}</span>
+                              <CardTitle className="text-xs sm:text-sm md:text-base font-normal tracking-tight leading-snug mt-1 sm:mt-1.5 line-clamp-2">
                                 {project.description}
                               </CardTitle>
                             </div>
@@ -1031,9 +1030,9 @@ export default function Home() {
 
               {/* Development & Analytics Projects */}
               <div>
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
-                    <Code2 className="mr-2 text-primary" size={20} />
+                <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                  <h3 className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground flex items-center">
+                    <Code2 className="mr-2 text-primary" size={18} />
                     Development & Analytics
                   </h3>
                   {/* Mobile swipe indicator */}
@@ -1043,9 +1042,9 @@ export default function Home() {
                   </div>
                 </div>
                 <Carousel setApi={setCarouselApi} className="w-full">
-                  <CarouselContent>
+                  <CarouselContent className="-ml-2 sm:-ml-4">
                     {developmentProjects.map((project, index) => (
-                      <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
+                      <CarouselItem key={index} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 md:basis-1/3">
                         <Card id="tilt" className="group overflow-hidden">
                           <CardHeader className="p-0 relative">
                             <Link href={project.href} target="_blank" passHref>
@@ -1096,9 +1095,9 @@ export default function Home() {
                             </Link>
                           </CardHeader>
                           <CardContent className="absolute bottom-0 w-full bg-gradient-to-t from-background/90 via-background/60 to-transparent backdrop-blur-sm transition-all duration-300 group-hover:from-background/95">
-                            <div className="p-2 sm:p-3">
-                              <span className="text-[9px] sm:text-[10px] text-primary font-medium uppercase tracking-wide">{project.category}</span>
-                              <CardTitle className="text-[10px] sm:text-xs font-normal tracking-tight leading-tight mt-0.5 line-clamp-2">
+                            <div className="p-2.5 sm:p-3 md:p-4">
+                              <span className="text-[10px] sm:text-xs text-primary font-medium uppercase tracking-wide">{project.category}</span>
+                              <CardTitle className="text-xs sm:text-sm md:text-base font-normal tracking-tight leading-snug mt-1 sm:mt-1.5 line-clamp-2">
                                 {project.description}
                               </CardTitle>
                             </div>
@@ -1114,9 +1113,9 @@ export default function Home() {
 
               {/* Design & UI/UX Projects */}
               <div>
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
-                    <Frame className="mr-2 text-primary" size={20} />
+                <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
+                  <h3 className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground flex items-center">
+                    <Frame className="mr-2 text-primary" size={18} />
                     Design & UI/UX
                   </h3>
                   {/* Mobile swipe indicator */}
@@ -1126,9 +1125,9 @@ export default function Home() {
                   </div>
                 </div>
                 <Carousel setApi={setCarouselApi} className="w-full">
-                  <CarouselContent>
+                  <CarouselContent className="-ml-2 sm:-ml-4">
                     {designProjects.map((project, index) => (
-                      <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
+                      <CarouselItem key={index} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 md:basis-1/3">
                         <Card id="tilt" className="group overflow-hidden">
                           <CardHeader className="p-0 relative">
                             <Link href={project.href} target="_blank" passHref>
@@ -1179,9 +1178,9 @@ export default function Home() {
                             </Link>
                           </CardHeader>
                           <CardContent className="absolute bottom-0 w-full bg-gradient-to-t from-background/90 via-background/60 to-transparent backdrop-blur-sm transition-all duration-300 group-hover:from-background/95">
-                            <div className="p-2 sm:p-3">
-                              <span className="text-[9px] sm:text-[10px] text-primary font-medium uppercase tracking-wide">{project.category}</span>
-                              <CardTitle className="text-[10px] sm:text-xs font-normal tracking-tight leading-tight mt-0.5 line-clamp-2">
+                            <div className="p-2.5 sm:p-3 md:p-4">
+                              <span className="text-[10px] sm:text-xs text-primary font-medium uppercase tracking-wide">{project.category}</span>
+                              <CardTitle className="text-xs sm:text-sm md:text-base font-normal tracking-tight leading-snug mt-1 sm:mt-1.5 line-clamp-2">
                                 {project.description}
                               </CardTitle>
                             </div>
@@ -1199,98 +1198,98 @@ export default function Home() {
         </section>
 
         {/* Expertise & Approach */}
-        <section id="expertise" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+        <section id="expertise" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="flex flex-col justify-start space-y-6 sm:space-y-8 max-w-7xl mx-auto">
-            <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
-              <div className="flex flex-col justify-center py-6 xl:p-6">
-                <h2 className="text-3xl sm:text-4xl tracking-tighter">
+            <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 md:grid-cols-2 xl:grid-cols-3">
+              <div className="flex flex-col justify-center py-4 sm:py-6 xl:p-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-tight">
                   Expertise &
                   <br />
                   <span className="text-gradient clash-grotesk">
                     Approach
                   </span>
                 </h2>
-                <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base tracking-tight text-secondary-foreground leading-relaxed">
                   Combining technical skills with strategic thinking for measurable business impact.
                 </p>
               </div>
 
               {/* Product Strategy & Data-Driven Approach */}
-              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+              <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
-                  <Target className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" size={24} />
-                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                  <Target className="mb-4 sm:mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" size={20} />
+                  <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2 sm:mb-3">
                     Product Strategy & Data-Driven Approach
                   </span>
-                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                  <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     A/B testing frameworks, user research, strategic roadmapping, and data-driven feature prioritization for measurable business growth.
                   </span>
                 </div>
-                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full">
                   30% task completion improvement • Top 10 ProductSpace finalist
                 </div>
               </div>
 
               {/* Data Analytics & Business Intelligence */}
-              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+              <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
-                  <BarChart3 className="mb-6 text-primary transition-all duration-300 group-hover:scale-110" size={24} />
-                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                  <BarChart3 className="mb-4 sm:mb-6 text-primary transition-all duration-300 group-hover:scale-110" size={20} />
+                  <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2 sm:mb-3">
                     Data Analytics & Business Intelligence
                   </span>
-                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                  <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     Power BI dashboards, SQL optimization, KPI frameworks, and Python analysis that transform data into actionable business insights.
                   </span>
                 </div>
-                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full">
                   9,000+ titles analyzed • 40% manual task reduction
                 </div>
               </div>
 
               {/* Full-Stack Development */}
-              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+              <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
-                  <Code2 className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3" size={24} />
-                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                  <Code2 className="mb-4 sm:mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3" size={20} />
+                  <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2 sm:mb-3">
                     Full-Stack Development
                   </span>
-                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                  <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     MERN stack applications, C# .NET solutions, and scalable systems with focus on performance optimization and user experience.
                   </span>
                 </div>
-                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full">
                   500+ students served • JWT & Redis implementation
                 </div>
               </div>
 
               {/* UX Design & Research */}
-              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+              <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
-                  <Frame className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" size={24} />
-                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                  <Frame className="mb-4 sm:mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" size={20} />
+                  <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2 sm:mb-3">
                     UX Design & Research
                   </span>
-                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                  <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     User interviews, journey mapping, behavioral analysis, and Figma prototyping for conversion-focused digital experiences.
                   </span>
                 </div>
-                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full">
                   Quarter-Finals L&apos;Oréal Challenge • Conversion optimization
                 </div>
               </div>
 
               {/* Collaborative Leadership */}
-              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+              <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
-                  <Globe className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" size={24} />
-                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                  <Globe className="mb-4 sm:mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" size={20} />
+                  <span className="text-base sm:text-lg md:text-xl tracking-tighter text-foreground mb-2 sm:mb-3">
                     Collaborative Leadership
                   </span>
-                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                  <span className="text-xs sm:text-sm md:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     Bridging business, design, and engineering teams. Thriving in cross-functional environments to solve complex challenges with diverse perspectives.
                   </span>
                 </div>
-                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                <div className="text-xs sm:text-sm text-primary font-medium pt-2 border-t border-white/10 w-full">
                   Led 26-member design team • 30+ communications & 25+ digital assets delivered
                 </div>
               </div>
@@ -1299,76 +1298,76 @@ export default function Home() {
         </section>
 
         {/* Contact */}
-        <section id="contact" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
-          <div className="flex flex-col items-center justify-center space-y-12 sm:space-y-16 max-w-5xl mx-auto">
+        <section id="contact" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+          <div className="flex flex-col items-center justify-center space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-16 max-w-5xl mx-auto">
             {/* Header - Centered */}
-            <div className="flex flex-col items-center text-center space-y-4">
-              <span className="text-gradient clash-grotesk text-sm sm:text-base tracking-tighter font-medium">
+            <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
+              <span className="text-gradient clash-grotesk text-xs sm:text-sm md:text-base tracking-tighter font-medium">
                 Let&apos;s Connect
               </span>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl tracking-tighter leading-tight px-2">
                 Ready to create{" "}
                 <span className="text-gradient clash-grotesk">impact?</span>
               </h2>
-              <p className="text-base sm:text-lg tracking-tight text-muted-foreground max-w-2xl">
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg tracking-tight text-muted-foreground max-w-2xl px-4 leading-relaxed">
                 Available for Product Management, Analytics & Development opportunities
-                <span className="block mt-1 text-primary font-medium">Starting January 2026</span>
+                <span className="block mt-1.5 sm:mt-2 text-primary font-medium">Starting January 2026</span>
               </p>
             </div>
 
             {/* Logo-based Contact Cards - Clean & Minimal */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 w-full">
               {/* Email */}
               <Link href="mailto:kavinarasan2019@gmail.com" className="group block">
-                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
-                  <Mail className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" />
-                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                <div className="flex flex-col items-center justify-center p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <Mail className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-primary mb-3 sm:mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" />
+                  <span className="text-xs sm:text-sm md:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
                     Email
                   </span>
-                  <span className="text-xs text-muted-foreground mt-1">Contact</span>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Contact</span>
                 </div>
               </Link>
 
               {/* LinkedIn */}
               <Link href="https://linkedin.com/in/kavinarasan" target="_blank" className="group block">
-                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
-                  <Linkedin className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-6" />
-                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                <div className="flex flex-col items-center justify-center p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <Linkedin className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-primary mb-3 sm:mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-6" />
+                  <span className="text-xs sm:text-sm md:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
                     LinkedIn
                   </span>
-                  <span className="text-xs text-muted-foreground mt-1">Network</span>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Network</span>
                 </div>
               </Link>
 
               {/* GitHub */}
               <Link href="https://github.com/kavinarasan-005" target="_blank" className="group block">
-                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
-                  <Code2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:-rotate-6" />
-                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                <div className="flex flex-col items-center justify-center p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <Code2 className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-primary mb-3 sm:mb-4 transition-all duration-500 group-hover:scale-125 group-hover:-rotate-6" />
+                  <span className="text-xs sm:text-sm md:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
                     GitHub
                   </span>
-                  <span className="text-xs text-muted-foreground mt-1">Projects</span>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Projects</span>
                 </div>
               </Link>
 
               {/* Resume */}
               <Link href="https://drive.google.com/file/d/14HQoHIGPDlGffvKBwOrx6YKhjW8W4j9o/view?usp=sharing" target="_blank" className="group block">
-                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
-                  <FileText className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-3" />
-                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                <div className="flex flex-col items-center justify-center p-6 sm:p-8 md:p-10 lg:p-12 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <FileText className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 text-primary mb-3 sm:mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-3" />
+                  <span className="text-xs sm:text-sm md:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
                     Resume
                   </span>
-                  <span className="text-xs text-muted-foreground mt-1">Download</span>
+                  <span className="text-[10px] sm:text-xs text-muted-foreground mt-1">Download</span>
                 </div>
               </Link>
             </div>
 
             {/* Additional Info - Clean */}
-            <div className="flex flex-col items-center text-center space-y-2 pt-4">
-              <p className="text-sm text-muted-foreground">
+            <div className="flex flex-col items-center text-center space-y-1.5 sm:space-y-2 pt-4 sm:pt-6">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Based in <span className="text-foreground font-medium">Dubai, UAE</span>
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 Open to Remote • Hybrid • On-site opportunities
               </p>
             </div>
