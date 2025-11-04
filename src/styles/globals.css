@@ -179,6 +179,38 @@ html {
     }
   }
 
+  /* Mobile responsiveness - ensure images and cards are responsive */
+  img,
+  video,
+  picture {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Ensure cards don't overflow */
+  .card,
+  [class*="card"],
+  [class*="Card"] {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Mobile-specific spacing adjustments */
+  @media (max-width: 480px) {
+    /* Phone: Reduce spacing even more */
+    section {
+      scroll-margin-top: 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    /* Tablet and below: Compact spacing */
+    section {
+      scroll-margin-top: 40px;
+    }
+  }
+
   /* Improved text rendering */
   body {
     -webkit-font-smoothing: antialiased;

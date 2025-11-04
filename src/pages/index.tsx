@@ -706,10 +706,10 @@ export default function Home() {
         {/* Hero Section */}
         <section
           id="home"
-          className="min-h-screen flex w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24 xl:flex-row xl:justify-between xl:items-center max-w-7xl mx-auto gap-8 sm:gap-10 md:gap-12 xl:gap-16"
+          className="flex w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:min-h-screen xl:flex-row xl:justify-between xl:items-center xl:py-24 max-w-7xl mx-auto gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16"
         >
           <div className={cn(styles.intro, "w-full xl:w-auto xl:max-w-2xl")}>
-            <div className="flex flex-row flex-wrap items-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+            <div className="flex flex-row flex-wrap items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4 md:mb-6">
               <span className={styles.pill}>Product</span>
               <span className={styles.pill}>Analytics</span>
               <span className={styles.pill}>Development</span>
@@ -723,11 +723,11 @@ export default function Home() {
                   Product & Data Analyst
                 </span>
               </h1>
-              <p className="mt-3 sm:mt-4 max-w-lg text-xs sm:text-sm md:text-base lg:text-lg tracking-tight text-muted-foreground leading-relaxed">
+              <p className="mt-2 sm:mt-3 md:mt-4 max-w-lg text-xs sm:text-sm md:text-base lg:text-lg tracking-tight text-muted-foreground leading-relaxed">
                 Passionate about turning data into decisions and insights into products. Building dashboards that uncover hidden trends and designing user experiences that drive behavior.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2.5 mt-6 sm:mt-8 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2.5 mt-4 sm:mt-6 md:mt-8 w-full sm:w-auto">
               <Button onClick={() => scrollTo("#contact")} className="w-full sm:w-auto text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3">
                 Get in touch <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
@@ -752,7 +752,7 @@ export default function Home() {
           </div>
           <div
             id={styles["canvas-container"]}
-            className="w-full h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[515px] xl:mt-0 relative overflow-hidden rounded-xl sm:rounded-2xl"
+            className="w-full max-w-full h-[200px] xs:h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px] 2xl:h-[515px] xl:mt-0 relative overflow-hidden rounded-xl sm:rounded-2xl mt-4 sm:mt-6 xl:mt-0"
           >
             {/* 3D Data Visualization - Pure CSS */}
             <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden">
@@ -798,12 +798,12 @@ export default function Home() {
         </section>
 
         {/* About */}
-        <section id="about" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-          <div className="flex max-w-6xl mx-auto flex-col justify-start space-y-6 sm:space-y-8 md:space-y-10">
+        <section id="about" className="px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
+          <div className="flex max-w-6xl mx-auto flex-col justify-start space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10">
             <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl tracking-tighter leading-relaxed text-foreground">
               Currently pursuing B.Tech. in Computer Science at ABV-IIITM Gwalior and seeking internships in Product, Analytics, and Development starting January 2026. I enjoy collaborating across business and tech to make measurable impact through data-driven insights.
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2 md:gap-6 lg:gap-8 xl:grid-cols-3">
               {aboutStats.map((stat) => (
                 <div
                   key={stat.label}
@@ -822,9 +822,9 @@ export default function Home() {
         </section>
 
         {/* Core Technologies */}
-        <section id="technologies" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-          <div className="flex flex-col justify-start space-y-6 sm:space-y-8 max-w-7xl mx-auto">
-            <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <section id="technologies" className="px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
+          <div className="flex flex-col justify-start space-y-4 sm:space-y-6 md:space-y-8 max-w-7xl mx-auto">
+            <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
               <div className="flex flex-col justify-center py-4 sm:py-6 xl:p-6">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-tight">
                   Core
@@ -858,7 +858,7 @@ export default function Home() {
         </section>
 
         {/* Experience */}
-        <section id="experience" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+        <section id="experience" className="px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
           <div className="mb-4 sm:mb-6 max-w-7xl mx-auto">
             <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
               ✨ Recent Experience
@@ -871,7 +871,7 @@ export default function Home() {
               Recent internships and freelance work in technology and product development.
             </p>
 
-            <div className="mt-6 sm:mt-8 grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2">
+            <div className="mt-4 sm:mt-6 md:mt-8 grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2">
               {/* IT Intern - Eros Group */}
               <div className="group flex flex-col items-start justify-between rounded-lg sm:rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
                 <div className="flex flex-col items-start w-full">
@@ -916,7 +916,7 @@ export default function Home() {
         </section>
 
         {/* Projects */}
-        <section id="projects" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
+        <section id="projects" className="px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
           {/* Gradient */}
           <div className="relative isolate -z-10">
             <div
@@ -944,7 +944,7 @@ export default function Home() {
             </p>
 
             {/* Carousel */}
-            <div className="mt-6 sm:mt-8 md:mt-10 space-y-6 sm:space-y-8 md:space-y-10">
+            <div className="mt-4 sm:mt-6 md:mt-8 lg:mt-10 space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10">
               {/* Product & Strategy Projects */}
               <div>
                 <div className="flex items-center justify-between mb-3 sm:mb-4 md:mb-6">
@@ -974,7 +974,7 @@ export default function Home() {
                                   muted
                                   playsInline
                                   preload="auto"
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
+                                  className="aspect-video w-full max-w-full h-auto rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
                                   style={{ willChange: 'transform' }}
                                   onLoadedData={(e) => {
                                     // Auto-play when video is loaded and visible
@@ -1004,7 +1004,7 @@ export default function Home() {
                                   width={600}
                                   height={300}
                                   quality={100}
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
+                                  className="aspect-video w-full max-w-full h-auto rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                               )}
                               {/* Gradient overlay for better text readability */}
@@ -1057,7 +1057,7 @@ export default function Home() {
                                   muted
                                   playsInline
                                   preload="auto"
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
+                                  className="aspect-video w-full max-w-full h-auto rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
                                   style={{ willChange: 'transform' }}
                                   onLoadedData={(e) => {
                                     // Auto-play when video is loaded and visible
@@ -1087,7 +1087,7 @@ export default function Home() {
                                   width={600}
                                   height={300}
                                   quality={100}
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
+                                  className="aspect-video w-full max-w-full h-auto rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                               )}
                               {/* Gradient overlay for better text readability */}
@@ -1140,7 +1140,7 @@ export default function Home() {
                                   muted
                                   playsInline
                                   preload="auto"
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
+                                  className="aspect-video w-full max-w-full h-auto rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
                                   style={{ willChange: 'transform' }}
                                   onLoadedData={(e) => {
                                     // Auto-play when video is loaded and visible
@@ -1170,7 +1170,7 @@ export default function Home() {
                                   width={600}
                                   height={300}
                                   quality={100}
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
+                                  className="aspect-video w-full max-w-full h-auto rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                               )}
                               {/* Gradient overlay for better text readability */}
@@ -1198,9 +1198,9 @@ export default function Home() {
         </section>
 
         {/* Expertise & Approach */}
-        <section id="expertise" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-          <div className="flex flex-col justify-start space-y-6 sm:space-y-8 max-w-7xl mx-auto">
-            <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <section id="expertise" className="px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
+          <div className="flex flex-col justify-start space-y-4 sm:space-y-6 md:space-y-8 max-w-7xl mx-auto">
+            <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
               <div className="flex flex-col justify-center py-4 sm:py-6 xl:p-6">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-tight">
                   Expertise &
@@ -1298,8 +1298,8 @@ export default function Home() {
         </section>
 
         {/* Contact */}
-        <section id="contact" className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20 lg:py-24">
-          <div className="flex flex-col items-center justify-center space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-16 max-w-5xl mx-auto">
+        <section id="contact" className="px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24">
+          <div className="flex flex-col items-center justify-center space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12 xl:space-y-16 max-w-5xl mx-auto">
             {/* Header - Centered */}
             <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
               <span className="text-gradient clash-grotesk text-xs sm:text-sm md:text-base tracking-tighter font-medium">
