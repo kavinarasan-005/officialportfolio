@@ -50,8 +50,13 @@
 
 /* Smooth native scrolling - Chronicle style */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: smooth !important;
   overflow-x: hidden;
+}
+
+/* Ensure smooth scrolling works everywhere */
+* {
+  scroll-behavior: inherit;
 }
 
 /* Performance optimizations */
