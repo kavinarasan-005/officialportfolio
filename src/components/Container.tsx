@@ -1,12 +1,18 @@
 import Head from "next/head";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn, scrollTo } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 import Preloader from "@/components/Preloader";
 import styles from "@/styles/Container.module.css";
+import dynamic from "next/dynamic";
+
+// Lazy load framer-motion only for nav items (not critical for initial render)
+const MotionLi = dynamic(
+  () => import("framer-motion").then((mod) => mod.motion.li),
+  { ssr: false }
+);
 
 type IconProps = {
   ["data-hide"]: boolean;
@@ -67,8 +73,31 @@ function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, onNavig
 }
 
 function NavItem(props: NavProps) {
+  // On mobile, skip animation for faster initial render
+  const [isMobile, setIsMobile] = useState(true);
+  
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+  }, []);
+
+  // Mobile: simple li without animation
+  if (isMobile) {
+    return (
+      <li className={props.className}>
+        <a
+          href={props.href}
+          onClick={(e) => handleClick(e, props.onNavigate)}
+          className={cn(props.i === 0 && "nav-active", "nav-link")}
+        >
+          {props.text}
+        </a>
+      </li>
+    );
+  }
+
+  // Desktop: use animated MotionLi (lazy loaded)
   return (
-    <motion.li
+    <MotionLi
       className={props.className}
       variants={variants}
       custom={props.i}
@@ -83,7 +112,7 @@ function NavItem(props: NavProps) {
       >
         {props.text}
       </a>
-    </motion.li>
+    </MotionLi>
   );
 }
 
@@ -115,15 +144,18 @@ export default function Container(props: ContainerProps) {
     };
   }, []);
 
-  // preloader effect - reduced time for faster initial load
+  // preloader effect - optimized for mobile performance
   useEffect(() => {
-    // Reduce preloader time and use requestAnimationFrame for smoother transition
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    const preloaderTime = isMobile ? 400 : 600; // Much faster on mobile: 400ms vs 600ms desktop
+    
+    // Use requestAnimationFrame for smoother transition
     const timer = requestAnimationFrame(() => {
       setTimeout(() => {
         setIsLoading(false);
         document.body.style.cursor = "default";
         window.scrollTo(0, 0);
-      }, 800); // Reduced from 2000ms to 800ms for faster initial load
+      }, preloaderTime);
     });
     
     return () => cancelAnimationFrame(timer);
@@ -205,15 +237,14 @@ export default function Container(props: ContainerProps) {
         </ul>
 
         {/* Mobile menu */}
-        <AnimatePresence key="menu">
-          {isOpen && (
-            <motion.div
-              className="fixed right-0 top-0 z-40 flex h-screen w-full flex-col justify-start overflow-y-hidden bg-background"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 1, type: "spring", bounce: 0.25 }}
-            >
+        {isOpen && (
+          <div
+            className="fixed right-0 top-0 z-40 flex h-screen w-full flex-col justify-start overflow-y-hidden bg-background"
+            style={{
+              transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+              transition: 'transform 0.5s cubic-bezier(0.76, 0, 0.24, 1)',
+            }}
+          >
               {/* Expandable menu */}
               <div className="flex h-20 max-h-20 min-h-[60px] w-full items-center justify-between border-b pl-[22px] pr-1">
                 <span className="text-base font-medium lowercase">Menu</span>
@@ -249,9 +280,8 @@ export default function Container(props: ContainerProps) {
                   </span>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+        )}
         <style jsx global>{`
           html,
           body {
@@ -265,9 +295,7 @@ export default function Container(props: ContainerProps) {
       </nav>
 
       {/* Preloader */}
-      <AnimatePresence mode="wait">
-        {isLoading && <Preloader />}
-      </AnimatePresence>
+      {isLoading && <Preloader />}
 
       {/* Main content */}
       <main className={cn("container", props.className)}>{children}</main>
