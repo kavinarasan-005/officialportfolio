@@ -384,7 +384,7 @@ export default function Home() {
     }
   }, []);
 
-  // Lazy load videos when they become visible
+  // Optimized lazy load videos with better performance
   useEffect(() => {
     if (!isPageReady) return;
 
@@ -395,14 +395,27 @@ export default function Home() {
           const src = video.getAttribute('data-src');
           if (src && !visibleVideos.has(src)) {
             setVisibleVideos((prev) => new Set([...prev, src]));
+            
+            // Preload video metadata first (lightweight)
+            video.preload = 'metadata';
             video.src = src;
-            video.load(); // Force video to start loading
+            
+            // Load video in the background, don't autoplay until user interaction or visible
+            video.load();
+            
+            // Only play when user hovers or clicks (save bandwidth)
+            const handleCanPlay = () => {
+              video.removeEventListener('canplay', handleCanPlay);
+            };
+            video.addEventListener('canplay', handleCanPlay);
+            
+            videoObserver.unobserve(video);
           }
-          videoObserver.unobserve(video);
         }
       });
     }, {
-      rootMargin: '50px', // Start loading 50px before video enters viewport
+      rootMargin: '100px', // Start loading earlier
+      threshold: 0.1, // Trigger when 10% visible
     });
 
     // Observe all videos with data-src attribute
@@ -877,12 +890,23 @@ export default function Home() {
                                 <video
                                   data-src={project.image}
                                   src={visibleVideos.has(project.image) ? project.image : undefined}
-                                  autoPlay={visibleVideos.has(project.image)}
+                                  autoPlay={false}
                                   loop
                                   muted
                                   playsInline
                                   preload="none"
                                   className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                  onMouseEnter={(e) => {
+                                    const video = e.currentTarget;
+                                    if (video.src && video.readyState >= 2) {
+                                      video.play().catch(() => {
+                                        // Silently handle play errors (e.g., user interaction required)
+                                      });
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.pause();
+                                  }}
                                 />
                               ) : (
                                 <Image
@@ -939,12 +963,23 @@ export default function Home() {
                                 <video
                                   data-src={project.image}
                                   src={visibleVideos.has(project.image) ? project.image : undefined}
-                                  autoPlay={visibleVideos.has(project.image)}
+                                  autoPlay={false}
                                   loop
                                   muted
                                   playsInline
                                   preload="none"
                                   className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                  onMouseEnter={(e) => {
+                                    const video = e.currentTarget;
+                                    if (video.src && video.readyState >= 2) {
+                                      video.play().catch(() => {
+                                        // Silently handle play errors (e.g., user interaction required)
+                                      });
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.pause();
+                                  }}
                                 />
                               ) : (
                                 <Image
@@ -1001,12 +1036,23 @@ export default function Home() {
                                 <video
                                   data-src={project.image}
                                   src={visibleVideos.has(project.image) ? project.image : undefined}
-                                  autoPlay={visibleVideos.has(project.image)}
+                                  autoPlay={false}
                                   loop
                                   muted
                                   playsInline
                                   preload="none"
                                   className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                  onMouseEnter={(e) => {
+                                    const video = e.currentTarget;
+                                    if (video.src && video.readyState >= 2) {
+                                      video.play().catch(() => {
+                                        // Silently handle play errors (e.g., user interaction required)
+                                      });
+                                    }
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.pause();
+                                  }}
                                 />
                               ) : (
                                 <Image

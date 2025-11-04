@@ -150,13 +150,13 @@ export default function Container(props: ContainerProps) {
     };
   }, []);
 
-  // preloader effect - properly timed to complete word animation
+  // preloader effect - properly timed to complete word animation + curtain reveal
   useEffect(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    // 9 words * timing + exit animation time
+    // 9 words * timing + exit animation time + curtain reveal
     const wordCount = 9;
     const wordDelay = isMobile ? 180 : 250;
-    const preloaderTime = (wordCount * wordDelay) + 800; // Total time for all words + exit animation
+    const preloaderTime = (wordCount * wordDelay) + 1200; // Total time for all words + exit animation + curtain
     
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -201,8 +201,10 @@ export default function Container(props: ContainerProps) {
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=4" />
         {/* Preload critical fonts */}
         <link rel="preload" href="/fonts/ClashGrotesk-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        {/* Prefetch Spline scene for faster loading after initial render */}
-        <link rel="prefetch" href="/assets/scene.splinecode" as="fetch" crossOrigin="anonymous" />
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://www.figma.com" />
+        <link rel="dns-prefetch" href="https://www.canva.com" />
+        <link rel="dns-prefetch" href="https://github.com" />
       </Head>
       <nav
         className={cn(
@@ -305,8 +307,35 @@ export default function Container(props: ContainerProps) {
       {/* Preloader */}
       {isLoading && <Preloader />}
 
-      {/* Main content */}
-      <main className={cn("container", props.className)}>{children}</main>
+      {/* Curtain reveal animation after preloader */}
+      <div 
+        className={cn(
+          "fixed inset-0 z-[9998] pointer-events-none",
+          "bg-background transition-opacity duration-1000 ease-out",
+          isLoading ? "opacity-100" : "opacity-0"
+        )}
+        style={{
+          clipPath: isLoading 
+            ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' 
+            : 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+          transition: 'clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.8s ease-out',
+        }}
+      />
+
+      {/* Main content with fade-in */}
+      <main 
+        className={cn(
+          "container transition-opacity duration-1000 ease-out",
+          isLoading ? "opacity-0" : "opacity-100",
+          props.className
+        )}
+        style={{
+          transform: isLoading ? 'translateY(20px)' : 'translateY(0)',
+          transition: 'opacity 1s ease-out, transform 1s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        {children}
+      </main>
       <Footer />
     </>
   );
