@@ -1,23 +1,28 @@
-/* Chronicle-style smooth scroll animations - optimized for performance */
+/* Ultra-optimized scroll animations - minimal overhead */
 
-/* Sections are visible immediately - no initial hidden state */
+/* Sections are visible immediately - no transitions by default */
 section {
   opacity: 1;
   transform: translateY(0);
-  /* Faster, lighter transitions */
-  transition: opacity 0.4s ease-out, 
-              transform 0.4s ease-out;
+  /* No transition by default for instant rendering */
+  transition: none;
+  /* Use will-change only when needed */
+  will-change: auto;
 }
 
-/* Revealed class for smooth scroll-in animation */
+/* Revealed class - minimal animation only when scrolling */
 section.reveal {
   opacity: 1;
   transform: translateY(0);
+  /* Very fast, lightweight transition only when needed */
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 
-/* Disable transitions on initial load for instant visibility */
-section:first-of-type {
-  transition: none;
+/* Disable all transitions on initial load */
+section:first-of-type,
+section:first-of-type.reveal {
+  transition: none !important;
+  will-change: auto !important;
 }
 
 /* Respect reduced motion preference */

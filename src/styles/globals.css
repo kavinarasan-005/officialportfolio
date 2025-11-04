@@ -212,9 +212,10 @@ html {
 
   .nav-active {
     color: rgb(226 232 240) !important;
-    @apply text-sm lowercase tracking-tight text-slate-200 transition-all duration-300;
+    @apply text-sm lowercase tracking-tight text-slate-200;
     font-weight: 600 !important;
     position: relative;
+    transition: color 0.15s ease-out;
   }
 
   .nav-active::after {
@@ -230,14 +231,15 @@ html {
   }
 
   .nav-link {
-    @apply text-sm lowercase tracking-tight text-slate-400 transition-all duration-300 hover:text-slate-200;
+    @apply text-sm lowercase tracking-tight text-slate-400 hover:text-slate-200;
     position: relative;
     font-weight: 400;
+    transition: color 0.15s ease-out;
   }
 
-  /* Enhanced link styles */
+  /* Enhanced link styles - faster transitions */
   a {
-    @apply transition-all duration-300;
+    transition: color 0.15s ease-out, opacity 0.15s ease-out;
   }
 
   /* blinking animation */
@@ -311,18 +313,22 @@ html {
 
   .animate-rotate-3d-slow {
     animation: rotate-3d-slow 25s linear infinite;
+    will-change: transform;
   }
 
   .animate-rotate-3d-medium {
     animation: rotate-3d-medium 18s linear infinite reverse;
+    will-change: transform;
   }
 
   .animate-rotate-3d-fast {
     animation: rotate-3d-fast 15s linear infinite;
+    will-change: transform;
   }
 
   .animate-spin-slower {
     animation: spin-slower 30s linear infinite;
+    will-change: transform;
   }
 
   .perspective-1000 {

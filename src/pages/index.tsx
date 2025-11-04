@@ -384,46 +384,84 @@ export default function Home() {
     }
   }, []);
 
-  // Aggressively optimized video loading - start loading immediately
+  // Ultra-optimized video loading - start loading immediately on page load
   useEffect(() => {
     if (!isPageReady) return;
 
-    // Prefetch first few videos immediately (above the fold)
+    // Prefetch ALL videos immediately in the background (using requestIdleCallback)
     const allVideoSources = [
       ...productProjects.map(p => p.image),
       ...developmentProjects.map(p => p.image),
       ...designProjects.map(p => p.image),
     ].filter(src => src.endsWith('.webm'));
 
-    // Prefetch first 3 videos immediately
-    allVideoSources.slice(0, 3).forEach(src => {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = src;
-      link.as = 'video';
-      document.head.appendChild(link);
-    });
+    // Use requestIdleCallback to prefetch videos when browser is idle
+    const prefetchVideos = () => {
+      allVideoSources.forEach((src, index) => {
+        // Prefetch first 3 immediately, rest when idle
+        if (index < 3) {
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = src;
+          link.as = 'video';
+          document.head.appendChild(link);
+        } else if (window.requestIdleCallback) {
+          window.requestIdleCallback(() => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = src;
+            link.as = 'video';
+            document.head.appendChild(link);
+          });
+        }
+      });
+    };
+
+    // Start prefetching immediately
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(prefetchVideos, { timeout: 2000 });
+    } else {
+      prefetchVideos();
+    }
+
+    // Optimized video observer with batch processing
+    let videoLoadQueue: HTMLVideoElement[] = [];
+    let isProcessingQueue = false;
+
+    const processVideoQueue = () => {
+      if (isProcessingQueue || videoLoadQueue.length === 0) return;
+      isProcessingQueue = true;
+
+      requestAnimationFrame(() => {
+        const video = videoLoadQueue.shift();
+        if (video) {
+          const src = video.getAttribute('data-src');
+          if (src && !visibleVideos.has(src)) {
+            setVisibleVideos((prev) => new Set([...prev, src]));
+            video.preload = 'auto';
+            video.src = src;
+            video.load();
+          }
+        }
+        isProcessingQueue = false;
+        if (videoLoadQueue.length > 0) {
+          processVideoQueue();
+        }
+      });
+    };
 
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const video = entry.target as HTMLVideoElement;
-          const src = video.getAttribute('data-src');
-          if (src && !visibleVideos.has(src)) {
-            setVisibleVideos((prev) => new Set([...prev, src]));
-            
-            // Load video immediately when visible
-            video.preload = 'auto';
-            video.src = src;
-            video.load();
-            
-            videoObserver.unobserve(video);
-          }
+          videoLoadQueue.push(video);
+          processVideoQueue();
+          videoObserver.unobserve(video);
         }
       });
     }, {
-      rootMargin: '200px', // Start loading much earlier (200px before viewport)
-      threshold: 0.01, // Trigger as soon as any part is visible
+      rootMargin: '300px', // Load even earlier (300px before viewport)
+      threshold: 0.01,
     });
 
     // Observe all videos with data-src attribute
@@ -433,6 +471,7 @@ export default function Home() {
     return () => {
       videos.forEach((video) => videoObserver.unobserve(video));
       videoObserver.disconnect();
+      videoLoadQueue = [];
     };
   }, [isPageReady, visibleVideos]);
 
@@ -508,19 +547,38 @@ export default function Home() {
         return currentSection;
       };
 
-      // Smooth scroll reveal animations - Chronicle style
+      // Optimized scroll reveal animations - minimal overhead
       const revealObserverOptions = {
         root: null,
-        rootMargin: '0px 0px -100px 0px',
-        threshold: 0.1
+        rootMargin: '0px 0px -50px 0px', // Smaller margin for faster triggering
+        threshold: 0.05 // Trigger earlier
+      };
+
+      // Batch process reveals for better performance
+      let revealQueue: Element[] = [];
+      let isProcessingReveals = false;
+
+      const processReveals = () => {
+        if (isProcessingReveals || revealQueue.length === 0) return;
+        isProcessingReveals = true;
+
+        requestAnimationFrame(() => {
+          revealQueue.forEach((element) => {
+            element.classList.add('reveal');
+          });
+          revealQueue = [];
+          isProcessingReveals = false;
+        });
       };
 
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal');
+          if (entry.isIntersecting && !entry.target.classList.contains('reveal')) {
+            revealQueue.push(entry.target);
+            revealObserver.unobserve(entry.target);
           }
         });
+        processReveals();
       }, revealObserverOptions);
 
       // Observe all sections for reveal animations
@@ -906,7 +964,8 @@ export default function Home() {
                                   muted
                                   playsInline
                                   preload="none"
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
+                                  style={{ willChange: 'transform' }}
                                   onMouseEnter={(e) => {
                                     const video = e.currentTarget;
                                     if (video.src && video.readyState >= 2) {
@@ -979,7 +1038,8 @@ export default function Home() {
                                   muted
                                   playsInline
                                   preload="none"
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
+                                  style={{ willChange: 'transform' }}
                                   onMouseEnter={(e) => {
                                     const video = e.currentTarget;
                                     if (video.src && video.readyState >= 2) {
@@ -1052,7 +1112,8 @@ export default function Home() {
                                   muted
                                   playsInline
                                   preload="none"
-                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-200 group-hover:scale-105"
+                                  style={{ willChange: 'transform' }}
                                   onMouseEnter={(e) => {
                                     const video = e.currentTarget;
                                     if (video.src && video.readyState >= 2) {
