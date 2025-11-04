@@ -16,7 +16,9 @@ export function scrollTo(elementOrSelector: Element | string | null) {
   }
   
   if (!element) {
-    console.warn('scrollTo: element not found', elementOrSelector);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('scrollTo: element not found', elementOrSelector);
+    }
     return;
   }
 
@@ -66,7 +68,9 @@ export function scrollTo(elementOrSelector: Element | string | null) {
             locomotive.scrollTo(scrollPosition);
             return;
           } catch (e2) {
-            console.warn('Locomotive scrollTo failed, using fallback');
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('Locomotive scrollTo failed, using fallback');
+            }
           }
         }
       }
@@ -82,7 +86,9 @@ export function scrollTo(elementOrSelector: Element | string | null) {
         return;
       }
     } catch (error) {
-      console.warn('Error using locomotive scroll:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Error using locomotive scroll:', error);
+      }
     }
   }
 

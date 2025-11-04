@@ -60,9 +60,12 @@ const config = withPWA({
     ignoreDuringBuilds: false,
   },
   typescript: {
-    // Don't fail build on type errors (we've fixed the critical ones)
     ignoreBuildErrors: false,
   },
+  // Production optimizations
+  poweredByHeader: false, // Remove X-Powered-By header for security
+  compress: true, // Enable gzip compression
+  productionBrowserSourceMaps: false, // Disable source maps in production for security
 });
 
 export default config;

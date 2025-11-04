@@ -59,6 +59,12 @@ function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, onNavig
   const href = e.currentTarget.getAttribute("href");
 
   if (href && href.startsWith("#")) {
+    // Immediately update active nav state
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.classList.remove("nav-active");
+    });
+    e.currentTarget.classList.add("nav-active");
+    
     const section = document.querySelector(href);
     if (section) {
       scrollTo(section);
@@ -66,9 +72,9 @@ function handleClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, onNavig
       if (onNavigate) {
         onNavigate();
       }
-    } else {
-      console.warn('Section not found:', href);
-    }
+      } else if (process.env.NODE_ENV === 'development') {
+        console.warn('Section not found:', href);
+      }
   }
 }
 
@@ -144,27 +150,28 @@ export default function Container(props: ContainerProps) {
     };
   }, []);
 
-  // preloader effect - optimized for mobile performance
+  // preloader effect - properly timed to complete word animation
   useEffect(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    const preloaderTime = isMobile ? 400 : 600; // Much faster on mobile: 400ms vs 600ms desktop
+    // 9 words * timing + exit animation time
+    const wordCount = 9;
+    const wordDelay = isMobile ? 180 : 250;
+    const preloaderTime = (wordCount * wordDelay) + 800; // Total time for all words + exit animation
     
-    // Use requestAnimationFrame for smoother transition
-    const timer = requestAnimationFrame(() => {
-      setTimeout(() => {
-        setIsLoading(false);
-        document.body.style.cursor = "default";
-        window.scrollTo(0, 0);
-      }, preloaderTime);
-    });
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      document.body.style.cursor = "default";
+      window.scrollTo(0, 0);
+    }, preloaderTime);
     
-    return () => cancelAnimationFrame(timer);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <>
       <Head>
         <title>{meta.title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <meta name="robots" content="follow, index" />
         <meta name="theme-color" content="#0A0A13" />
         <meta content={meta.description} name="description" />
@@ -187,10 +194,11 @@ export default function Container(props: ContainerProps) {
         <meta name="twitter:description" content={meta.description} />
         <meta name="twitter:image" content={meta.image} />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=3" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=3" />
-        <link rel="shortcut icon" type="image/png" href="/favicon.png?v=3" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=3" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=4" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=4" />
+        <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=4" />
         {/* Preload critical fonts */}
         <link rel="preload" href="/fonts/ClashGrotesk-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Prefetch Spline scene for faster loading after initial render */}

@@ -1,48 +1,31 @@
-/* Scroll animations for locomotive-scroll */
-/* Desktop: locomotive-scroll handles animations */
-/* Mobile: IntersectionObserver with smooth transitions */
+/* Chronicle-style smooth scroll animations */
 
-/* Desktop - visible by default, locomotive-scroll handles animations */
-[data-scroll-section] {
+/* Sections are visible by default - only animate on scroll */
+section {
   opacity: 1;
-  will-change: transform, opacity;
+  transform: translateY(0);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-scroll] {
+/* Optional: Subtle fade-in effect for sections below the fold */
+section:not(:first-of-type) {
   opacity: 1;
-  will-change: transform, opacity;
+  transform: translateY(0);
 }
 
-/* Desktop - let locomotive-scroll handle reveals */
-html.is-revealed [data-scroll-section],
-html.is-revealed [data-scroll] {
+/* Revealed class for smooth scroll-in animation (optional enhancement) */
+section.reveal {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* Mobile-specific animations - optimized for performance */
-@media (max-width: 1024px) {
-  /* Initial hidden state on mobile only */
-  [data-scroll-section],
-  [data-scroll] {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
-  }
-  
-  /* Revealed state on mobile - smooth transition */
-  [data-scroll-section].is-revealed,
-  [data-scroll-section].is-inview {
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  section {
     opacity: 1;
-    transform: translateY(0);
-    will-change: auto; /* Remove will-change after animation to save resources */
-  }
-  
-  [data-scroll].is-revealed,
-  [data-scroll].is-inview {
-    opacity: 1;
-    transform: translateY(0);
-    will-change: auto;
+    transform: none;
+    transition: none;
   }
 }
 

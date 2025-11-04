@@ -1,29 +1,10 @@
 import Container from "@/components/Container";
-import { useEffect, useRef, Suspense, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import styles from "@/styles/Home.module.css";
-import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-// Dynamically import Spline with no SSR
-const Spline = dynamic(() => import("@splinetool/react-spline").then(mod => mod.default), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full min-h-[400px]">
-      <span className="text-muted-foreground">Loading 3D scene...</span>
-    </div>
-  )
-});
-
-// Error fallback component
-const SplineError = () => (
-  <div className="flex items-center justify-center h-full min-h-[400px]">
-    <div className="text-center">
-      <p className="text-muted-foreground mb-2">3D scene unavailable</p>
-      <p className="text-xs text-muted-foreground/70">Please refresh the page</p>
-    </div>
-  </div>
-);
+// Removed heavy 3D library - using CSS-based animation instead
+import { Button } from "@/components/ui/button";
 import {
   ChevronRight,
   Code2,
@@ -101,12 +82,12 @@ const aboutStats = [
 const coreTechnologies = [
   {
     title: "Product Management",
-    description: "Strategic roadmapping, PRD creation, A/B testing frameworks, and data-driven feature prioritization for maximum business impact.",
+    description: "Strategic roadmapping, PRD creation, A/B testing frameworks, and data-driven feature prioritization for measurable business growth.",
     icon: Target,
   },
   {
-    title: "Data Analytics",
-    description: "Advanced SQL queries, Power BI dashboards, Python analysis, and data visualization to transform raw data into actionable insights.",
+    title: "Data Analytics & BI",
+    description: "Advanced SQL queries, Power BI dashboards, Python analysis, KPI frameworks, and executive reporting that transform data into insights.",
     icon: BarChart3,
   },
   {
@@ -118,11 +99,6 @@ const coreTechnologies = [
     title: "UI/UX Design",
     description: "User-centered design with Figma, comprehensive user research, interactive prototyping, and customer journey mapping expertise.",
     icon: Frame,
-  },
-  {
-    title: "Business Intelligence",
-    description: "Executive dashboard creation, KPI framework design, metric definition, and strategic reporting for data-driven decision making.",
-    icon: TrendingUp,
   },
   {
     title: "Process Automation",
@@ -159,7 +135,7 @@ const productProjects = [
 // Development & Analytics Projects
 const developmentProjects = [
   {
-    title: "Messo", 
+    title: "Messo",
     description: "MERN-based hostel mess management system for 500+ students. Reduced downtime by 30% with JWT auth and Redis caching.",
     image: "/assets/messo_w.webm",
     href: "https://github.com/krizto8/Messo/tree/main/Messo/Messo-main",
@@ -234,7 +210,9 @@ const solutions = [
   },
 ];
 
-const technicalHighlights = [
+// Removed unused technicalHighlights - content merged into coreTechnologies
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _technicalHighlights = [
   {
     title: "Product Management",
     description: "A/B testing, user research, roadmapping, and feature prioritization using data-driven frameworks and agile methodologies.",
@@ -246,7 +224,7 @@ const technicalHighlights = [
     icon: BarChart3,
   },
   {
-    title: "MERN Stack Development", 
+    title: "MERN Stack Development",
     description: "Full-stack applications using MongoDB, Express, React, and Node.js with JWT authentication and Redis caching.",
     icon: Code2,
   },
@@ -262,7 +240,8 @@ const technicalHighlights = [
   },
 ];
 
-const careerFocus = [
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _careerFocus = [
   {
     title: "Product Management",
     description: "Roadmapping, user research, A/B testing, and feature prioritization using data-driven frameworks for measurable business impact.",
@@ -295,7 +274,8 @@ const careerFocus = [
   },
 ];
 
-const contactInfo = [
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _contactInfo = [
   {
     city: "Dubai, UAE",
     address: "Available for Remote & On-site Work",
@@ -322,7 +302,8 @@ const contactInfo = [
   },
 ];
 
-const opportunities = [
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _opportunities = [
   {
     title: "Product Management Intern",
     location: "Remote/Hybrid",
@@ -346,7 +327,8 @@ const opportunities = [
   },
 ];
 
-const workingPrinciples = [
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _workingPrinciples = [
   {
     title: "Data-Driven Decision Making",
     description: "I believe in letting data guide every decision. Whether it's A/B testing product features or analyzing user behavior, I use metrics and analytics to validate assumptions and optimize outcomes.",
@@ -385,101 +367,20 @@ const workingPrinciples = [
 ];
 
 export default function Home() {
-  const refScrollContainer = useRef(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+  // Carousel state - kept for potential future use (e.g., pagination indicators)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [current, setCurrent] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [count, setCount] = useState<number>(0);
-  const [splineScene, setSplineScene] = useState<string>("/assets/scene.splinecode");
-  const [shouldLoadSpline, setShouldLoadSpline] = useState<boolean>(false);
   const [isPageReady, setIsPageReady] = useState<boolean>(false);
   const [visibleVideos, setVisibleVideos] = useState<Set<string>>(new Set());
 
-  // Set absolute URL for Spline scene and defer loading until page is ready
+  // Mark page as ready after initial render
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setSplineScene(`${window.location.origin}/assets/scene.splinecode`);
-      
-      // Mark page as ready after initial render
       setIsPageReady(true);
-      
-      // Load 3D scene ONLY when hero section is visible in viewport
-      // This prevents loading if user scrolls past quickly
-      const setupHeroObserver = () => {
-        const canvasContainerId = styles["canvas-container"];
-        if (!canvasContainerId) return null;
-        const heroContainer = document.getElementById(canvasContainerId);
-        if (heroContainer) {
-          const heroObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-                // Hero section is visible - load after idle time
-                if ('requestIdleCallback' in window) {
-                  requestIdleCallback(() => {
-                    setShouldLoadSpline(true);
-                  }, { timeout: 2000 });
-                } else {
-                  setTimeout(() => {
-                    setShouldLoadSpline(true);
-                  }, 1000);
-                }
-                heroObserver.disconnect(); // Stop observing once triggered
-              }
-            });
-          }, {
-            threshold: [0.3], // Trigger when 30% of hero section is visible
-            rootMargin: '100px', // Start checking 100px before it enters viewport
-          });
-
-          heroObserver.observe(heroContainer);
-
-          // Also load after very long delay as fallback (only if still on page)
-          const fallbackTimer = setTimeout(() => {
-            heroObserver.disconnect();
-            if ('requestIdleCallback' in window) {
-              requestIdleCallback(() => {
-                setShouldLoadSpline(true);
-              }, { timeout: 2000 });
-            } else {
-              setShouldLoadSpline(true);
-            }
-          }, 8000); // 8 second fallback - very conservative
-
-          return () => {
-            heroObserver.disconnect();
-            clearTimeout(fallbackTimer);
-          };
-        }
-        return null;
-      };
-
-      // Wait for DOM to be ready, then set up observer
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupHeroObserver);
-      } else {
-        // DOM already ready, but wait a tick for React to render
-        setTimeout(setupHeroObserver, 100);
-      }
-
-      // Fallback if container not found - delay significantly
-      const fallbackTimer = setTimeout(() => {
-        if (!shouldLoadSpline) {
-          if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => {
-              setShouldLoadSpline(true);
-            }, { timeout: 3000 });
-          } else {
-            setTimeout(() => {
-              setShouldLoadSpline(true);
-            }, 5000);
-          }
-        }
-      }, 10000); // 10 second fallback
-
-      return () => {
-        clearTimeout(fallbackTimer);
-        document.removeEventListener('DOMContentLoaded', setupHeroObserver);
-      };
     }
   }, []);
 
@@ -514,116 +415,113 @@ export default function Home() {
     };
   }, [isPageReady, visibleVideos]);
 
-  // handle scroll - defer initialization until page is ready
+  // Navigation highlighting on scroll
   useEffect(() => {
     if (!isPageReady) return;
-    
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-link");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let locomotiveInstance: any = null;
-    let handleScrollCleanup: (() => void) | null = null;
+    // Wait a bit for DOM to be fully ready
+    const initNavigation = () => {
+      const sections = document.querySelectorAll("section[id]");
+      const navLinks = document.querySelectorAll(".nav-link");
 
-    async function getLocomotive() {
-      // Defer locomotive-scroll loading significantly to not block initial render
-      await new Promise(resolve => {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(resolve, { timeout: 4000 }); // Increased timeout - load only when really idle
-        } else {
-          setTimeout(resolve, 1500); // Increased delay for non-supporting browsers
-        }
-      });
-      const Locomotive = (await import("locomotive-scroll")).default;
-      const loco = new Locomotive({
-        el: refScrollContainer.current ?? new HTMLElement(),
-        smooth: true,
-        multiplier: 0.7, // Reduced for smoother scrolling
-        class: "is-revealed",
-        scrollbarContainer: false,
-        scrollbarClass: 'c-scrollbar',
-        getDirection: true,
-        getSpeed: true,
-        lerp: 0.05, // Reduced for smoother transitions
-        resetNativeScroll: true, // Added for better native scroll behavior
-        smartphone: {
-          smooth: true, // Enable smooth scroll on mobile
-        },
-        tablet: {
-          smooth: true, // Enable smooth scroll on tablet
-          breakpoint: 1024,
-        },
-      });
-      
-      locomotiveInstance = loco;
-      // expose instance for external scroll actions (used by scrollTo helper)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as { locomotive?: any }).locomotive = loco;
-
-      // Add IntersectionObserver fallback for mobile animations only
-      // This ensures animations work even if locomotive-scroll has issues on mobile
-      const isMobile = window.innerWidth <= 1024;
-      if (isMobile) {
-        // Trigger animation earlier for smoother feel
-        const observerOptions = {
-          root: null,
-          rootMargin: '0px 0px -50px 0px', // Trigger 50px before element enters viewport
-          threshold: 0.1
-        };
-
-        const revealObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('is-revealed', 'is-inview');
-            }
-          });
-        }, observerOptions);
-
-        // Observe all scroll sections
-        const scrollSections = document.querySelectorAll('[data-scroll-section], [data-scroll]');
-        scrollSections.forEach((section) => {
-          revealObserver.observe(section);
-        });
-
-        // Store observer for cleanup
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
-        (locomotiveInstance as any).__mobileObserver = revealObserver;
+      if (sections.length === 0 || navLinks.length === 0) {
+        // Retry if sections aren't ready yet
+        setTimeout(initNavigation, 100);
+        return;
       }
 
-      // Handle scroll event - use window scroll which works with locomotive
-      function handleScroll() {
-        // Get scroll position - try locomotive's scroll instance first, fallback to window
-        let scrollY = window.scrollY || document.documentElement.scrollTop;
-        
-        // Try to get locomotive scroll position if available
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (locomotiveInstance?.scroll?.instance?.scroll?.y !== undefined) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          scrollY = locomotiveInstance.scroll.instance.scroll.y;
+      // Track which section is currently active
+      let currentActiveSection = "";
+
+      // Function to update active nav link
+      const updateActiveNav = (sectionId: string) => {
+        // Skip if already active
+        if (sectionId === currentActiveSection) return;
+
+        currentActiveSection = sectionId;
+
+        // Update all navigation links
+        navLinks.forEach((link) => {
+          const href = link.getAttribute("href") ?? "";
+          // Remove active class from all links
+          link.classList.remove("nav-active");
+          // Add active class to matching link
+          if (href === `#${sectionId}`) {
+            link.classList.add("nav-active");
+          }
+        });
+      };
+
+      // Function to find which section is currently in view - SIMPLIFIED AND RELIABLE
+      const getCurrentSection = () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const offset = 150; // Offset to account for navbar
+
+        // If at very top, always show home
+        if (scrollY < 50) {
+          return "home";
         }
-        
+
+        // Find the section that's currently in view
+        // Check sections in reverse order to catch the most recent one
+        let currentSection = "home";
+
+        // Loop through sections and find which one is currently at the top of viewport
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const section = sections[i];
+          if (!section) continue;
+
+          const htmlSection = section as HTMLElement;
+          const sectionId = section.getAttribute("id") ?? "";
+          if (!sectionId) continue;
+
+          const sectionTop = htmlSection.offsetTop;
+
+          // If we've scrolled past this section's top (with offset), this is the active section
+          if (scrollY + offset >= sectionTop) {
+            currentSection = sectionId;
+            break; // Found the section, stop checking
+          }
+        }
+
+        return currentSection;
+      };
+
+      // Smooth scroll reveal animations - Chronicle style
+      const revealObserverOptions = {
+        root: null,
+        rootMargin: '0px 0px -100px 0px',
+        threshold: 0.1
+      };
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal');
+          }
+        });
+      }, revealObserverOptions);
+
+      // Observe all sections for reveal animations
+      sections.forEach((section) => {
+        revealObserver.observe(section);
+        // Immediately add reveal class to make sections visible on page load
+        section.classList.add('reveal');
+      });
+
+      // Track scroll position for navbar background and nav highlighting
+      const handleScroll = () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
         setIsScrolled(scrollY > 0);
 
-        let current = "";
+        // Update active navigation based on current section
+        const currentSection = getCurrentSection();
+        if (currentSection) {
+          updateActiveNav(currentSection);
+        }
+      };
 
-        sections.forEach((section) => {
-          const sectionTop = section.offsetTop;
-          const navHeight = 80; // Navbar height offset
-          // Check if we're at or past the section start (with some threshold)
-          if (scrollY >= sectionTop - navHeight - 100) {
-            current = section.getAttribute("id") ?? "";
-          }
-        });
-
-        navLinks.forEach((li) => {
-          li.classList.remove("nav-active");
-          if (li.getAttribute("href") === `#${current}`) {
-            li.classList.add("nav-active");
-          }
-        });
-      }
-
-      // Use requestAnimationFrame for smoother scroll tracking
+      // Add scroll listener - use throttling for performance
       let ticking = false;
       function onScroll() {
         if (!ticking) {
@@ -635,42 +533,29 @@ export default function Home() {
         }
       }
 
+      // Add scroll listener
       window.addEventListener("scroll", onScroll, { passive: true });
-      
-      // Store cleanup function
-      handleScrollCleanup = () => {
+
+      // Also add resize listener in case sections move
+      window.addEventListener("resize", handleScroll, { passive: true });
+
+      // Set initial state immediately
+      handleScroll();
+
+      // Also set it after a short delay to ensure DOM is ready
+      setTimeout(handleScroll, 100);
+
+      return () => {
         window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", handleScroll);
+        revealObserver.disconnect();
       };
-    }
-
-    void getLocomotive();
-
-    return () => {
-      // cleanup scroll handlers
-      if (handleScrollCleanup) {
-        handleScrollCleanup();
-      }
-
-      // cleanup mobile observer if it exists
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
-      if (locomotiveInstance && (locomotiveInstance as any).__mobileObserver) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-type-assertion
-        (locomotiveInstance as any).__mobileObserver.disconnect();
-      }
-      
-      // cleanup locomotive instance if created
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (typeof window !== 'undefined' && (window as { locomotive?: { destroy?: () => void } }).locomotive) {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-          (window as { locomotive?: { destroy?: () => void } }).locomotive?.destroy?.();
-        } catch (e) {
-          // ignore destroy errors
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        delete (window as { locomotive?: any }).locomotive;
-      }
     };
+
+    // Initialize navigation highlighting
+    const cleanup = initNavigation();
+
+    return cleanup;
   }, [isPageReady]);
 
   useEffect(() => {
@@ -687,7 +572,7 @@ export default function Home() {
   // card hover effect - defer initialization until page is ready
   useEffect(() => {
     if (!isPageReady) return;
-    
+
     // Defer tilt initialization to not block initial render
     const initTilt = async () => {
       // Lazy load VanillaTilt
@@ -707,7 +592,7 @@ export default function Home() {
         });
       }
     };
-    
+
     // Use requestIdleCallback if available, otherwise setTimeout
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() => {
@@ -722,672 +607,617 @@ export default function Home() {
 
   return (
     <Container>
-      <div className="flex flex-col space-y-24 sm:space-y-28 md:space-y-32">
-        <div ref={refScrollContainer}>
-          <Gradient />
+      <div>
+        <Gradient />
 
-          {/* Hero Section */}
-          <section
-            id="home"
-            data-scroll-section
-            className="mt-20 sm:mt-32 md:mt-40 flex w-full flex-col items-center px-4 sm:px-6 py-12 sm:py-16 xl:mt-0 xl:min-h-screen xl:flex-row xl:justify-between xl:px-0 xl:py-0"
+        {/* Hero Section */}
+        <section
+          id="home"
+          className="min-h-screen flex w-full flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 xl:flex-row xl:justify-between max-w-7xl mx-auto"
+        >
+          <div className={styles.intro}>
+            <div className="flex flex-row flex-wrap items-center gap-1.5">
+              <span className={styles.pill}>Product</span>
+              <span className={styles.pill}>Analytics</span>
+              <span className={styles.pill}>Development</span>
+            </div>
+            <div>
+              <h1>
+                <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-foreground 2xl:text-8xl">
+                  Hi, I&apos;m Kavin Arasan
+                  <br />
+                </span>
+                <span className="clash-grotesk text-gradient text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-8xl">
+                  Product & Data Analyst
+                </span>
+              </h1>
+              <p className="mt-1 max-w-lg text-sm sm:text-base md:text-lg tracking-tight text-muted-foreground 2xl:text-xl">
+                Passionate about turning data into decisions and insights into products. Building dashboards that uncover hidden trends and designing user experiences that drive behavior.
+              </p>
+            </div>
+            <span className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-1.5 pt-6 w-full sm:w-auto">
+              <Button onClick={() => scrollTo("#contact")} className="w-full sm:w-auto">
+                Get in touch <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => scrollTo("#about")}
+                className="w-full sm:w-auto"
+              >
+                Learn More
+              </Button>
+            </span>
+
+            <div
+              className={cn(
+                styles.scroll,
+                isScrolled && styles["scroll--hidden"],
+              )}
+            >
+              Scroll to discover{" "}
+              <TriangleDownIcon className="mt-1 animate-bounce" />
+            </div>
+          </div>
+          <div
+            id={styles["canvas-container"]}
+            className="mt-8 sm:mt-12 md:mt-14 h-[300px] sm:h-[400px] md:h-[450px] w-full xl:mt-0 xl:h-[515px] relative overflow-hidden rounded-2xl"
           >
-            <div className={styles.intro}>
-              <div className="flex flex-row flex-wrap items-center gap-1.5">
-                <span className={styles.pill}>Product</span>
-                <span className={styles.pill}>Analytics</span>
-                <span className={styles.pill}>Development</span>
+            {/* 3D Data Visualization - Pure CSS */}
+            <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden">
+              {/* Rotating Rings - Responsive sizing */}
+              <div className="absolute w-[180px] h-[180px] xs:w-[220px] xs:h-[220px] sm:w-[280px] sm:h-[280px] md:w-[350px] md:h-[350px] animate-rotate-3d-slow preserve-3d">
+                <div className="absolute inset-0 rounded-full border-2 sm:border-3 md:border-4 border-primary/40 transform rotate-x-60 animate-pulse-slow"></div>
               </div>
-              <div>
-                <h1>
-                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tighter text-foreground 2xl:text-8xl">
-                    Hi, I&apos;m Kavin Arasan
-                    <br />
+              <div className="absolute w-[220px] h-[220px] xs:w-[260px] xs:h-[260px] sm:w-[320px] sm:h-[320px] md:w-[400px] md:h-[400px] animate-rotate-3d-medium preserve-3d">
+                <div className="absolute inset-0 rounded-full border-2 sm:border-3 md:border-4 border-primary/30 transform rotate-y-45 animate-pulse-slower"></div>
+              </div>
+              <div className="absolute w-[260px] h-[260px] xs:w-[300px] xs:h-[300px] sm:w-[360px] sm:h-[360px] md:w-[450px] md:h-[450px] animate-rotate-3d-fast preserve-3d">
+                <div className="absolute inset-0 rounded-full border-2 sm:border-3 md:border-4 border-primary/20 transform rotate-x-45 rotate-y-45"></div>
+              </div>
+
+              {/* Central Data Node - Responsive */}
+              <div className="absolute w-20 h-20 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 backdrop-blur-sm border-2 border-primary/40 animate-pulse-gentle shadow-2xl shadow-primary/20">
+                <div className="absolute inset-1 sm:inset-1.5 md:inset-2 rounded-full bg-gradient-to-tr from-primary/40 to-transparent animate-spin-slow"></div>
+              </div>
+
+              {/* Orbiting Nodes - Responsive */}
+              <div className="absolute w-full h-full animate-spin-slower">
+                <div className="absolute top-1/4 left-1/2 w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-4 sm:h-4 -ml-1.25 xs:-ml-1.5 sm:-ml-2 rounded-full bg-primary shadow-lg shadow-primary/50 animate-pulse-slow"></div>
+                <div className="absolute top-3/4 left-1/4 w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 rounded-full bg-secondary shadow-lg shadow-secondary/50 animate-pulse-slower"></div>
+                <div className="absolute top-1/2 right-1/4 w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-5 sm:h-5 rounded-full bg-primary shadow-lg shadow-primary/50 animate-pulse-slow delay-1000"></div>
+                <div className="absolute bottom-1/4 left-2/3 w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 rounded-full bg-secondary shadow-lg shadow-secondary/50"></div>
+              </div>
+
+              {/* Connection Lines - Hidden on very small screens */}
+              <svg className="absolute inset-0 w-full h-full opacity-10 xs:opacity-20 animate-pulse-gentle hidden xs:block" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+                <line x1="200" y1="200" x2="200" y2="100" stroke="url(#grad1)" strokeWidth="2" />
+                <line x1="200" y1="200" x2="300" y2="200" stroke="url(#grad1)" strokeWidth="2" />
+                <line x1="200" y1="200" x2="200" y2="300" stroke="url(#grad1)" strokeWidth="2" />
+                <line x1="200" y1="200" x2="100" y2="200" stroke="url(#grad1)" strokeWidth="2" />
+                <defs>
+                  <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#7c3aed', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#a78bfa', stopOpacity: 1 }} />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        {/* About */}
+        <section id="about" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+          <div className="flex max-w-6xl mx-auto flex-col justify-start space-y-8 sm:space-y-10">
+            <h2 className="py-4 sm:py-8 pb-2 text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-normal text-foreground xl:text-5xl">
+              Currently pursuing B.Tech. in Computer Science at ABV-IIITM Gwalior and seeking internships in Product, Analytics, and Development starting January 2026. I enjoy collaborating across business and tech to make measurable impact through data-driven insights.
+            </h2>
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 xl:grid-cols-3">
+              {aboutStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex flex-col items-center text-center xl:items-start xl:text-start"
+                >
+                  <span className="clash-grotesk text-gradient text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight xl:text-6xl">
+                    {stat.value}
                   </span>
-                  <span className="clash-grotesk text-gradient text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-8xl">
-                    Product & Data Analyst
+                  <span className="tracking-tight text-xs sm:text-sm text-muted-foreground xl:text-lg">
+                    {stat.label}
                   </span>
-                </h1>
-                <p className="mt-1 max-w-lg text-sm sm:text-base md:text-lg tracking-tight text-muted-foreground 2xl:text-xl">
-                  Passionate about turning data into decisions and insights into products. Building dashboards that uncover hidden trends and designing user experiences that drive behavior.
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Core Technologies */}
+        <section id="technologies" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+          <div className="flex flex-col justify-start space-y-6 sm:space-y-8 max-w-7xl mx-auto">
+            <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="flex flex-col justify-center py-6 xl:p-6">
+                <h2 className="text-3xl sm:text-4xl tracking-tighter">
+                  Core
+                  <br />
+                  <span className="text-gradient clash-grotesk">
+                    Skills
+                  </span>
+                </h2>
+                <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
+                  My expertise spans product management, data analytics, and full-stack development.
                 </p>
               </div>
-              <span className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-1.5 pt-6 w-full sm:w-auto">
-                <Button onClick={() => scrollTo("#contact")} className="w-full sm:w-auto">
-                  Get in touch <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => scrollTo("#about")}
-                  className="w-full sm:w-auto"
+              {coreTechnologies.map((tech) => (
+                <div
+                  key={tech.title}
+                  className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20"
                 >
-                  Learn More
-                </Button>
-              </span>
-
-              <div
-                className={cn(
-                  styles.scroll,
-                  isScrolled && styles["scroll--hidden"],
-                )}
-              >
-                Scroll to discover{" "}
-                <TriangleDownIcon className="mt-1 animate-bounce" />
-              </div>
-            </div>
-            <div
-              id={styles["canvas-container"]}
-              className="mt-8 sm:mt-12 md:mt-14 h-[300px] sm:h-[400px] md:h-[450px] w-full xl:mt-0 xl:h-[515px]"
-            >
-              {shouldLoadSpline ? (
-                <Suspense fallback={
-                  <div className="flex items-center justify-center h-full min-h-[400px]">
-                    <div className="animate-pulse">
-                      <span className="text-muted-foreground text-sm">Loading 3D scene...</span>
-                    </div>
-                  </div>
-                }>
-                  <ErrorBoundary fallback={<SplineError />}>
-                    <Spline 
-                      scene={splineScene}
-                      onLoad={() => {
-                        console.log("Spline scene loaded successfully");
-                      }}
-                      onError={(error) => {
-                        console.error("Spline error:", error);
-                        console.log("Attempting to load from:", splineScene);
-                      }}
-                    />
-                  </ErrorBoundary>
-                </Suspense>
-              ) : (
-                <div className="flex items-center justify-center h-full min-h-[400px] bg-background/20 rounded-2xl sm:rounded-3xl border border-border/50">
-                  <div className="text-center">
-                    <div className="inline-block h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-                    <p className="text-xs text-muted-foreground">Preparing 3D scene...</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* About */}
-          <section id="about" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
-            <div className="flex max-w-6xl flex-col justify-start space-y-8 sm:space-y-10">
-              <h2 className="py-4 sm:py-8 pb-2 text-2xl sm:text-3xl md:text-4xl tracking-tighter leading-normal text-foreground xl:text-5xl">
-                Currently pursuing B.Tech. in Computer Science at ABV-IIITM Gwalior and seeking internships in Product, Analytics, and Development starting January 2026. I enjoy collaborating across business and tech to make measurable impact through data-driven insights.
-              </h2>
-              <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 xl:grid-cols-3">
-                {aboutStats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="flex flex-col items-center text-center xl:items-start xl:text-start"
-                  >
-                    <span className="clash-grotesk text-gradient text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight xl:text-6xl">
-                      {stat.value}
+                  <div className="flex flex-col items-start w-full">
+                    <tech.icon className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" size={24} />
+                    <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                      {tech.title}
                     </span>
-                    <span className="tracking-tight text-xs sm:text-sm text-muted-foreground xl:text-lg">
-                      {stat.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Core Technologies */}
-          <section id="technologies" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
-            <div
-              data-scroll
-              data-scroll-speed=".4"
-              data-scroll-position="top"
-              className="flex flex-col justify-start space-y-6 sm:space-y-8"
-            >
-              <div className="grid items-center gap-3 sm:gap-4 md:gap-1.5 md:grid-cols-2 xl:grid-cols-3">
-                <div className="flex flex-col py-4 sm:py-6 xl:p-6">
-                  <h2 className="text-3xl sm:text-4xl tracking-tighter">
-                    Core
-                    <br />
-                    <span className="text-gradient clash-grotesk">
-                      Skills
-                    </span>
-                  </h2>
-                  <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
-                    My expertise spans product management, data analytics, and full-stack development.
-                  </p>
-                </div>
-                {coreTechnologies.map((tech) => (
-                  <div
-                    key={tech.title}
-                    className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]"
-                  >
-                    <div className="flex flex-col items-start">
-                      <tech.icon className="mb-6 text-primary" size={20} />
-                      <span className="text-lg tracking-tighter text-foreground">
-                        {tech.title}
-                      </span>
-                    </div>
-                    <span className="mt-2 tracking-tight text-muted-foreground">
+                    <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed">
                       {tech.description}
                     </span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Experience */}
-          <section id="experience" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
-            <div
-              data-scroll
-              data-scroll-speed=".4"
-              data-scroll-position="top"
-              className="mb-4 sm:mb-6"
-            >
-              <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
-                ✨ Recent Experience
-              </span>
-              <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
-                Professional{" "}
-                <span className="text-gradient clash-grotesk">Experience.</span>
-              </h2>
-              <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
-                Recent internships and freelance work in technology and product development.
-              </p>
+        {/* Experience */}
+        <section id="experience" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+          <div className="mb-4 sm:mb-6 max-w-7xl mx-auto">
+            <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
+              ✨ Recent Experience
+            </span>
+            <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
+              Professional{" "}
+              <span className="text-gradient clash-grotesk">Experience.</span>
+            </h2>
+            <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
+              Recent internships and freelance work in technology and product development.
+            </p>
 
-              <div className="mt-6 sm:mt-8 grid items-start gap-4 sm:gap-6 md:grid-cols-2">
-                {/* IT Intern - Eros Group */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                  <div className="flex flex-col items-start">
-                    <Building className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      IT Intern — Eros Group
-                    </span>
-                    <span className="mt-1 text-xs text-primary font-medium">
-                      May 2025 – July 2025 | Dubai, UAE
-                    </span>
-                  </div>
-                  <span className="mt-4 sm:mt-6 text-sm sm:text-base tracking-tight text-muted-foreground">
+            <div className="mt-6 sm:mt-8 grid items-stretch gap-6 md:grid-cols-2">
+              {/* IT Intern - Eros Group */}
+              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+                <div className="flex flex-col items-start w-full">
+                  <Building className="mb-6 text-primary transition-transform duration-300 group-hover:scale-110" size={24} />
+                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-2">
+                    IT Intern — Eros Group
+                  </span>
+                  <span className="text-xs text-primary font-medium mb-4">
+                    May 2025 – July 2025 | Dubai, UAE
+                  </span>
+                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                     Led IT service desk analytics for 1,000+ requests, developing Power BI dashboards for senior leadership. Built 3 ERP modules using C# and .NET, collaborating with operations teams.
                   </span>
-                  <div className="mt-4 sm:mt-6 text-xs text-primary font-medium">
-                    Data Analytics • ERP Development • Process Automation
-                  </div>
                 </div>
+                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                  Data Analytics • ERP Development • Process Automation
+                </div>
+              </div>
 
-                {/* Frontend Developer - LUMINTRIQAI */}
-                <Link href="https://www.figma.com/design/Wz2EkcZVY47SggKG6SnTMU/Actual-Page?node-id=0-1&t=hp6ZNFdTmxFTqoaL-1" target="_blank" className="group">
-                  <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                    <div className="flex flex-col items-start">
-                      <Code2 className="mb-4 sm:mb-6 text-primary" size={20} />
-                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                        Frontend Developer — LUMINTRIQAI
-                      </span>
-                      <span className="mt-1 text-xs text-primary font-medium">
-                        Mar 2025 – Apr 2025 | Remote
-                      </span>
-                    </div>
-                    <span className="mt-4 sm:mt-6 text-sm sm:text-base tracking-tight text-muted-foreground">
+              {/* Frontend Developer - LUMINTRIQAI */}
+              <Link href="https://www.figma.com/design/Wz2EkcZVY47SggKG6SnTMU/Actual-Page?node-id=0-1&t=hp6ZNFdTmxFTqoaL-1" target="_blank" className="group block h-full">
+                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20 h-full">
+                  <div className="flex flex-col items-start w-full">
+                    <Code2 className="mb-6 text-primary transition-transform duration-300 group-hover:scale-110" size={24} />
+                    <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-2">
+                      Frontend Developer — LUMINTRIQAI
+                    </span>
+                    <span className="text-xs text-primary font-medium mb-4">
+                      Mar 2025 – Apr 2025 | Remote
+                    </span>
+                    <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
                       Developed and deployed a responsive React.js landing page for an AI consulting platform, integrating dynamic components and delivering pixel-perfect UI from Figma designs.
                     </span>
-                    <div className="mt-4 sm:mt-6 text-xs text-primary font-medium flex items-center">
-                      View Project <ChevronRight className="ml-1 h-3 w-3" />
-                    </div>
                   </div>
-                </Link>
-              </div>
+                  <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full flex items-center transition-transform duration-300 group-hover:translate-x-1">
+                    View Project <ChevronRight className="ml-1 h-3 w-3" />
+                  </div>
+                </div>
+              </Link>
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Projects */}
-          <section id="projects" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
-            {/* Gradient */}
-            <div className="relative isolate -z-10">
+        {/* Projects */}
+        <section id="projects" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+          {/* Gradient */}
+          <div className="relative isolate -z-10">
+            <div
+              className="absolute inset-x-0 -top-40 transform-gpu overflow-hidden blur-[100px] sm:-top-80 lg:-top-60"
+              aria-hidden="true"
+            >
               <div
-                className="absolute inset-x-0 -top-40 transform-gpu overflow-hidden blur-[100px] sm:-top-80 lg:-top-60"
-                aria-hidden="true"
-              >
-                <div
-                  className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary via-primary to-secondary opacity-10 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-                  style={{
-                    clipPath:
-                      "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-                  }}
-                />
+                className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary via-primary to-secondary opacity-10 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                style={{
+                  clipPath:
+                    "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+                }}
+              />
+            </div>
+          </div>
+          <div className="mb-4 sm:mb-6 max-w-7xl mx-auto">
+            <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
+              ✨ Featured Projects
+            </span>
+            <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
+              Product & Analytics Portfolio.
+            </h2>
+            <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
+              A showcase of my work in product management, data analytics, and full-stack development with measurable impact.
+            </p>
+
+            {/* Carousel */}
+            <div className="mt-8 sm:mt-10 space-y-8 sm:space-y-10">
+              {/* Product & Strategy Projects */}
+              <div>
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
+                    <Target className="mr-2 text-primary" size={20} />
+                    Product & Strategy
+                  </h3>
+                  {/* Mobile swipe indicator */}
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
+                    <span>Swipe</span>
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </div>
+                <Carousel setApi={setCarouselApi} className="w-full">
+                  <CarouselContent>
+                    {productProjects.map((project, index) => (
+                      <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
+                        <Card id="tilt" className="group overflow-hidden">
+                          <CardHeader className="p-0 relative">
+                            <Link href={project.href} target="_blank" passHref>
+                              {project.image.endsWith(".webm") ? (
+                                <video
+                                  data-src={project.image}
+                                  src={visibleVideos.has(project.image) ? project.image : undefined}
+                                  autoPlay={visibleVideos.has(project.image)}
+                                  loop
+                                  muted
+                                  playsInline
+                                  preload="none"
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                />
+                              ) : (
+                                <Image
+                                  src={project.image}
+                                  alt={project.title}
+                                  width={600}
+                                  height={300}
+                                  quality={100}
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              )}
+                              {/* Gradient overlay for better text readability */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60" />
+                            </Link>
+                          </CardHeader>
+                          <CardContent className="absolute bottom-0 w-full bg-gradient-to-t from-background/90 via-background/60 to-transparent backdrop-blur-sm transition-all duration-300 group-hover:from-background/95">
+                            <div className="p-2 sm:p-3">
+                              <span className="text-[9px] sm:text-[10px] text-primary font-medium uppercase tracking-wide">{project.category}</span>
+                              <CardTitle className="text-[10px] sm:text-xs font-normal tracking-tight leading-tight mt-0.5 line-clamp-2">
+                                {project.description}
+                              </CardTitle>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </div>
+
+              {/* Development & Analytics Projects */}
+              <div>
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
+                    <Code2 className="mr-2 text-primary" size={20} />
+                    Development & Analytics
+                  </h3>
+                  {/* Mobile swipe indicator */}
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
+                    <span>Swipe</span>
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </div>
+                <Carousel setApi={setCarouselApi} className="w-full">
+                  <CarouselContent>
+                    {developmentProjects.map((project, index) => (
+                      <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
+                        <Card id="tilt" className="group overflow-hidden">
+                          <CardHeader className="p-0 relative">
+                            <Link href={project.href} target="_blank" passHref>
+                              {project.image.endsWith(".webm") ? (
+                                <video
+                                  data-src={project.image}
+                                  src={visibleVideos.has(project.image) ? project.image : undefined}
+                                  autoPlay={visibleVideos.has(project.image)}
+                                  loop
+                                  muted
+                                  playsInline
+                                  preload="none"
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                />
+                              ) : (
+                                <Image
+                                  src={project.image}
+                                  alt={project.title}
+                                  width={600}
+                                  height={300}
+                                  quality={100}
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              )}
+                              {/* Gradient overlay for better text readability */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60" />
+                            </Link>
+                          </CardHeader>
+                          <CardContent className="absolute bottom-0 w-full bg-gradient-to-t from-background/90 via-background/60 to-transparent backdrop-blur-sm transition-all duration-300 group-hover:from-background/95">
+                            <div className="p-2 sm:p-3">
+                              <span className="text-[9px] sm:text-[10px] text-primary font-medium uppercase tracking-wide">{project.category}</span>
+                              <CardTitle className="text-[10px] sm:text-xs font-normal tracking-tight leading-tight mt-0.5 line-clamp-2">
+                                {project.description}
+                              </CardTitle>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </div>
+
+              {/* Design & UI/UX Projects */}
+              <div>
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
+                    <Frame className="mr-2 text-primary" size={20} />
+                    Design & UI/UX
+                  </h3>
+                  {/* Mobile swipe indicator */}
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
+                    <span>Swipe</span>
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </div>
+                <Carousel setApi={setCarouselApi} className="w-full">
+                  <CarouselContent>
+                    {designProjects.map((project, index) => (
+                      <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
+                        <Card id="tilt" className="group overflow-hidden">
+                          <CardHeader className="p-0 relative">
+                            <Link href={project.href} target="_blank" passHref>
+                              {project.image.endsWith(".webm") ? (
+                                <video
+                                  data-src={project.image}
+                                  src={visibleVideos.has(project.image) ? project.image : undefined}
+                                  autoPlay={visibleVideos.has(project.image)}
+                                  loop
+                                  muted
+                                  playsInline
+                                  preload="none"
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill transition-transform duration-500 group-hover:scale-105"
+                                />
+                              ) : (
+                                <Image
+                                  src={project.image}
+                                  alt={project.title}
+                                  width={600}
+                                  height={300}
+                                  quality={100}
+                                  className="aspect-video h-full w-full rounded-t-md bg-primary object-cover transition-transform duration-500 group-hover:scale-105"
+                                />
+                              )}
+                              {/* Gradient overlay for better text readability */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60" />
+                            </Link>
+                          </CardHeader>
+                          <CardContent className="absolute bottom-0 w-full bg-gradient-to-t from-background/90 via-background/60 to-transparent backdrop-blur-sm transition-all duration-300 group-hover:from-background/95">
+                            <div className="p-2 sm:p-3">
+                              <span className="text-[9px] sm:text-[10px] text-primary font-medium uppercase tracking-wide">{project.category}</span>
+                              <CardTitle className="text-[10px] sm:text-xs font-normal tracking-tight leading-tight mt-0.5 line-clamp-2">
+                                {project.description}
+                              </CardTitle>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
               </div>
             </div>
-            <div data-scroll data-scroll-speed=".4" className="mb-4 sm:mb-6">
-              <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
-                ✨ Featured Projects
-              </span>
-              <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
-                Product & Analytics Portfolio.
-              </h2>
-              <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg">
-                A showcase of my work in product management, data analytics, and full-stack development with measurable impact.
-              </p>
+          </div>
+        </section>
 
-              {/* Carousel */}
-              <div className="mt-8 sm:mt-10 space-y-8 sm:space-y-10">
-                {/* Product & Strategy Projects */}
-                <div>
-                  <div className="flex items-center justify-between mb-4 sm:mb-6">
-                    <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
-                      <Target className="mr-2 text-primary" size={20} />
-                      Product & Strategy
-                    </h3>
-                    {/* Mobile swipe indicator */}
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
-                      <span>Swipe</span>
-                      <ChevronRight className="h-3 w-3" />
-                    </div>
-                  </div>
-                  <Carousel setApi={setCarouselApi} className="w-full">
-                    <CarouselContent>
-                      {productProjects.map((project, index) => (
-                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
-                          <Card id="tilt">
-                            <CardHeader className="p-0">
-                              <Link href={project.href} target="_blank" passHref>
-                                {project.image.endsWith(".webm") ? (
-                                  <video
-                                    data-src={project.image}
-                                    src={visibleVideos.has(project.image) ? project.image : undefined}
-                                    autoPlay={visibleVideos.has(project.image)}
-                                    loop
-                                    muted
-                                    playsInline
-                                    preload="none"
-                                    className="aspect-video h-full w-full rounded-t-md bg-primary object-cover object-fill"
-                                  />
-                                ) : (
-                                  <Image
-                                    src={project.image}
-                                    alt={project.title}
-                                    width={600}
-                                    height={300}
-                                    quality={100}
-                                    className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                                  />
-                                )}
-                              </Link>
-                            </CardHeader>
-                            <CardContent className="absolute bottom-0 w-full bg-background/40 backdrop-blur-sm sm:bg-background/50 sm:backdrop-blur">
-                              <div className="border-t border-white/5 p-2 sm:p-4">
-                                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                                  <span className="text-[10px] sm:text-xs text-primary font-medium">{project.category}</span>
-                                </div>
-                                <CardTitle className="text-xs sm:text-base font-normal tracking-tighter leading-tight sm:leading-normal">
-                                  {project.description}
-                                </CardTitle>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
-                </div>
-
-                {/* Development & Analytics Projects */}
-                <div>
-                  <div className="flex items-center justify-between mb-4 sm:mb-6">
-                    <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
-                      <Code2 className="mr-2 text-primary" size={20} />
-                      Development & Analytics
-                    </h3>
-                    {/* Mobile swipe indicator */}
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
-                      <span>Swipe</span>
-                      <ChevronRight className="h-3 w-3" />
-                    </div>
-                  </div>
-                  <Carousel setApi={setCarouselApi} className="w-full">
-                    <CarouselContent>
-                      {developmentProjects.map((project, index) => (
-                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
-                          <Card id="tilt">
-                            <CardHeader className="p-0">
-                              <Link href={project.href} target="_blank" passHref>
-                                {project.image.endsWith(".webm") ? (
-                                  <video
-                                    src={project.image}
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    preload="none"
-                                    className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                                  />
-                                ) : (
-                                  <Image
-                                    src={project.image}
-                                    alt={project.title}
-                                    width={600}
-                                    height={300}
-                                    quality={100}
-                                    className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                                  />
-                                )}
-                              </Link>
-                            </CardHeader>
-                            <CardContent className="absolute bottom-0 w-full bg-background/40 backdrop-blur-sm sm:bg-background/50 sm:backdrop-blur">
-                              <div className="border-t border-white/5 p-2 sm:p-4">
-                                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                                  <span className="text-[10px] sm:text-xs text-primary font-medium">{project.category}</span>
-                                </div>
-                                <CardTitle className="text-xs sm:text-base font-normal tracking-tighter leading-tight sm:leading-normal">
-                                  {project.description}
-                                </CardTitle>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
-                </div>
-
-                {/* Design & UI/UX Projects */}
-                <div>
-                  <div className="flex items-center justify-between mb-4 sm:mb-6">
-                    <h3 className="text-lg sm:text-xl tracking-tighter text-foreground flex items-center">
-                      <Frame className="mr-2 text-primary" size={20} />
-                      Design & UI/UX
-                    </h3>
-                    {/* Mobile swipe indicator */}
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground sm:hidden animate-pulse">
-                      <span>Swipe</span>
-                      <ChevronRight className="h-3 w-3" />
-                    </div>
-                  </div>
-                  <Carousel setApi={setCarouselApi} className="w-full">
-                    <CarouselContent>
-                      {designProjects.map((project, index) => (
-                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
-                          <Card id="tilt">
-                            <CardHeader className="p-0">
-                              <Link href={project.href} target="_blank" passHref>
-                                {project.image.endsWith(".webm") ? (
-                                  <video
-                                    src={project.image}
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    preload="none"
-                                    className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                                  />
-                                ) : (
-                                  <Image
-                                    src={project.image}
-                                    alt={project.title}
-                                    width={600}
-                                    height={300}
-                                    quality={100}
-                                    className="aspect-video h-full w-full rounded-t-md bg-primary object-cover"
-                                  />
-                                )}
-                              </Link>
-                            </CardHeader>
-                            <CardContent className="absolute bottom-0 w-full bg-background/40 backdrop-blur-sm sm:bg-background/50 sm:backdrop-blur">
-                              <div className="border-t border-white/5 p-2 sm:p-4">
-                                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                                  <span className="text-[10px] sm:text-xs text-primary font-medium">{project.category}</span>
-                                </div>
-                                <CardTitle className="text-xs sm:text-base font-normal tracking-tighter leading-tight sm:leading-normal">
-                                  {project.description}
-                                </CardTitle>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Expertise & Approach */}
-          <section id="expertise" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
-            <div
-              data-scroll
-              data-scroll-speed=".4"
-              data-scroll-position="top"
-              className="flex flex-col justify-start space-y-6 sm:space-y-8"
-            >
-              <div className="grid items-start gap-3 sm:gap-4 md:gap-1.5 md:grid-cols-2 xl:grid-cols-3">
-                <div className="flex flex-col py-4 sm:py-6 xl:p-6">
-                  <h2 className="text-3xl sm:text-4xl tracking-tighter">
-                    Expertise &
-                    <br />
-                    <span className="text-gradient clash-grotesk">
-                      Approach
-                    </span>
-                  </h2>
-                  <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
-                    Combining technical skills with strategic thinking for measurable business impact.
-                  </p>
-                </div>
-                
-                {/* Product Strategy & Impact */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]">
-                  <div className="flex flex-col items-start">
-                    <Target className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      Product Strategy & Impact
-                    </span>
-                  </div>
-                  <span className="mt-2 text-sm sm:text-base tracking-tight text-muted-foreground flex-1">
-                    A/B testing frameworks, user research, strategic roadmapping, and data-driven feature prioritization for measurable business growth.
+        {/* Expertise & Approach */}
+        <section id="expertise" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+          <div className="flex flex-col justify-start space-y-6 sm:space-y-8 max-w-7xl mx-auto">
+            <div className="grid items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="flex flex-col justify-center py-6 xl:p-6">
+                <h2 className="text-3xl sm:text-4xl tracking-tighter">
+                  Expertise &
+                  <br />
+                  <span className="text-gradient clash-grotesk">
+                    Approach
                   </span>
-                  <div className="mt-4 text-xs text-primary font-medium">
-                    30% task completion improvement • Top 10 ProductSpace finalist
-                  </div>
-                </div>
-
-                {/* Data Analytics & Intelligence */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]">
-                  <div className="flex flex-col items-start">
-                    <BarChart3 className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      Data Analytics & Intelligence
-                    </span>
-                  </div>
-                  <span className="mt-2 text-sm sm:text-base tracking-tight text-muted-foreground flex-1">
-                    Power BI dashboards, SQL optimization, KPI frameworks, and Python analysis that transform complex data into actionable business insights.
-                  </span>
-                  <div className="mt-4 text-xs text-primary font-medium">
-                    9,000+ titles analyzed • 40% manual task reduction
-                  </div>
-                </div>
-
-                {/* Full-Stack Development */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]">
-                  <div className="flex flex-col items-start">
-                    <Code2 className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      Full-Stack Development
-                    </span>
-                  </div>
-                  <span className="mt-2 text-sm sm:text-base tracking-tight text-muted-foreground flex-1">
-                    MERN stack applications, C# .NET solutions, and scalable systems with focus on performance optimization and user experience.
-                  </span>
-                  <div className="mt-4 text-xs text-primary font-medium">
-                    500+ students served • JWT & Redis implementation
-                  </div>
-                </div>
-
-                {/* UX Design & Research */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]">
-                  <div className="flex flex-col items-start">
-                    <Frame className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      UX Design & Research
-                    </span>
-                  </div>
-                  <span className="mt-2 text-sm sm:text-base tracking-tight text-muted-foreground flex-1">
-                    User interviews, journey mapping, behavioral analysis, and Figma prototyping for conversion-focused digital experiences.
-                  </span>
-                  <div className="mt-4 text-xs text-primary font-medium">
-                    Quarter-Finals L&apos;Oréal Challenge • Conversion optimization
-                  </div>
-                </div>
-
-                {/* Data-Driven Decision Making */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]">
-                  <div className="flex flex-col items-start">
-                    <BarChart3 className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      Data-Driven Methodology
-                    </span>
-                  </div>
-                  <span className="mt-2 text-sm sm:text-base tracking-tight text-muted-foreground flex-1">
-                    Every decision backed by metrics and analytics. Using A/B testing and user behavior analysis to validate assumptions and optimize outcomes.
-                  </span>
-                </div>
-
-                {/* Cross-Functional Collaboration */}
-                <div className="flex flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 md:p-10 lg:p-14 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md min-h-[240px] sm:min-h-[280px]">
-                  <div className="flex flex-col items-start">
-                    <Globe className="mb-4 sm:mb-6 text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      Collaborative Leadership
-                    </span>
-                  </div>
-                  <span className="mt-2 text-sm sm:text-base tracking-tight text-muted-foreground flex-1">
-                    Bridging business, design, and engineering teams. Thriving in cross-functional environments to solve complex challenges with diverse perspectives.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Contact */}
-          <section id="contact" data-scroll-section className="px-4 sm:px-6 py-12 sm:py-16">
-            <div
-              data-scroll
-              data-scroll-speed=".4"
-              data-scroll-position="top"
-              className="flex flex-col justify-start space-y-8 sm:space-y-12"
-            >
-              {/* Header */}
-              <div className="flex flex-col items-start">
-                <span className="text-gradient clash-grotesk text-xs sm:text-sm tracking-tighter">
-                  ✨ Let&apos;s Connect
-                </span>
-                <h2 className="mt-3 text-3xl sm:text-4xl tracking-tighter xl:text-6xl">
-                  Ready to create{" "}
-                  <span className="text-gradient clash-grotesk">impact?</span>
                 </h2>
-                <p className="mt-1.5 text-sm sm:text-base tracking-tight text-muted-foreground xl:text-lg max-w-2xl">
-                  Available for Product Management, Analytics, and Development internships starting January 2026. Let&apos;s build something amazing together.
+                <p className="mt-2 text-sm sm:text-base tracking-tight text-secondary-foreground">
+                  Combining technical skills with strategic thinking for measurable business impact.
                 </p>
               </div>
 
-              {/* Contact Grid */}
-              <div className="grid items-stretch gap-4 sm:gap-6 md:gap-8 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-
-                {/* Let's Connect */}
-                <Link href="mailto:kavinarasan2019@gmail.com" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                    <div className="flex flex-col items-start space-y-2">
-                      <Mail className="text-primary" size={20} />
-                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                        Let&apos;s Collaborate
-                      </span>
-                    </div>
-                    <span className="mt-4 text-sm sm:text-base tracking-tight text-muted-foreground">
-                      Open to discussing exciting projects, internship opportunities, freelance work, and collaborative ventures. Always ready for new challenges.
-                    </span>
-                    <div className="mt-4 sm:mt-6 text-xs text-primary font-medium">
-                      kavinarasan2019@gmail.com • Professional inquiries
-                    </div>
-                  </div>
-                </Link>
-
-                {/* LinkedIn */}
-                <Link href="https://linkedin.com/in/kavinarasan" target="_blank" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                    <div className="flex flex-col items-start space-y-2">
-                      <Linkedin className="text-primary" size={20} />
-                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                        Professional Network
-                      </span>
-                    </div>
-                    <span className="mt-4 text-sm sm:text-base tracking-tight text-muted-foreground">
-                      Connect on LinkedIn for professional networking, career updates, and industry insights. Let&apos;s build meaningful connections.
-                    </span>
-                    <div className="mt-4 sm:mt-6 text-xs text-primary font-medium">
-                      linkedin.com/in/kavinarasan • Professional updates
-                    </div>
-                  </div>
-                </Link>
-
-                {/* GitHub */}
-                <Link href="https://github.com/kavinarasan-005" target="_blank" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                    <div className="flex flex-col items-start space-y-2">
-                      <Code2 className="text-primary" size={20} />
-                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                        Code Repository
-                      </span>
-                    </div>
-                    <span className="mt-4 text-sm sm:text-base tracking-tight text-muted-foreground">
-                      Explore my open-source projects, contributions, and code samples. Dive into technical implementations and development journey.
-                    </span>
-                    <div className="mt-4 sm:mt-6 text-xs text-primary font-medium">
-                      github.com/kavinarasan-005 • Open source projects
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Resume */}
-                            {/* Resume */}
-                <Link href="https://drive.google.com/file/d/14HQoHIGPDlGffvKBwOrx6YKhjW8W4j9o/view?usp=sharing" target="_blank" className="group block h-full">
-                  <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                    <div className="flex flex-col items-start space-y-2">
-                      <FileText className="text-primary" size={20} />
-                      <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                        Professional Resume
-                      </span>
-                    </div>
-                    <span className="mt-4 text-sm sm:text-base tracking-tight text-muted-foreground">
-                      Download detailed resume with complete work experience, projects, skills, and achievements. Comprehensive professional overview.
-                    </span>
-                    <div className="mt-4 sm:mt-6 text-xs text-primary font-medium">
-                      PDF Download • Complete professional profile
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Opportunities */}
-                <div className="flex h-full flex-col items-start justify-between rounded-md bg-white/5 p-6 sm:p-8 shadow-md backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:shadow-md">
-                  <div className="flex flex-col items-start space-y-2">
-                    <Rocket className="text-primary" size={20} />
-                    <span className="text-base sm:text-lg tracking-tighter text-foreground">
-                      Current Availability
-                    </span>
-                  </div>
-                  <span className="mt-4 text-sm sm:text-base tracking-tight text-muted-foreground">
-                    Actively seeking Product Management, Business Analytics, and Software Development internship opportunities starting January 2026.
+              {/* Product Strategy & Data-Driven Approach */}
+              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+                <div className="flex flex-col items-start w-full">
+                  <Target className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" size={24} />
+                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                    Product Strategy & Data-Driven Approach
                   </span>
-                  <div className="mt-4 sm:mt-6 text-xs text-primary font-medium">
-                    Dubai, UAE • Remote/Hybrid • Full-time internships
-                  </div>
+                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                    A/B testing frameworks, user research, strategic roadmapping, and data-driven feature prioritization for measurable business growth.
+                  </span>
+                </div>
+                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                  30% task completion improvement • Top 10 ProductSpace finalist
+                </div>
+              </div>
+
+              {/* Data Analytics & Business Intelligence */}
+              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+                <div className="flex flex-col items-start w-full">
+                  <BarChart3 className="mb-6 text-primary transition-all duration-300 group-hover:scale-110" size={24} />
+                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                    Data Analytics & Business Intelligence
+                  </span>
+                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                    Power BI dashboards, SQL optimization, KPI frameworks, and Python analysis that transform data into actionable business insights.
+                  </span>
+                </div>
+                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                  9,000+ titles analyzed • 40% manual task reduction
+                </div>
+              </div>
+
+              {/* Full-Stack Development */}
+              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+                <div className="flex flex-col items-start w-full">
+                  <Code2 className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:-rotate-3" size={24} />
+                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                    Full-Stack Development
+                  </span>
+                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                    MERN stack applications, C# .NET solutions, and scalable systems with focus on performance optimization and user experience.
+                  </span>
+                </div>
+                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                  500+ students served • JWT & Redis implementation
+                </div>
+              </div>
+
+              {/* UX Design & Research */}
+              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+                <div className="flex flex-col items-start w-full">
+                  <Frame className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" size={24} />
+                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                    UX Design & Research
+                  </span>
+                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                    User interviews, journey mapping, behavioral analysis, and Figma prototyping for conversion-focused digital experiences.
+                  </span>
+                </div>
+                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                  Quarter-Finals L&apos;Oréal Challenge • Conversion optimization
+                </div>
+              </div>
+
+              {/* Collaborative Leadership */}
+              <div className="group flex flex-col items-start justify-between rounded-md bg-white/5 p-8 md:p-10 lg:p-12 shadow-md backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-white/10 hover:shadow-xl hover:shadow-primary/10 border border-transparent hover:border-primary/20">
+                <div className="flex flex-col items-start w-full">
+                  <Globe className="mb-6 text-primary transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" size={24} />
+                  <span className="text-lg sm:text-xl tracking-tighter text-foreground mb-3">
+                    Collaborative Leadership
+                  </span>
+                  <span className="text-sm sm:text-base tracking-tight text-muted-foreground leading-relaxed mb-4">
+                    Bridging business, design, and engineering teams. Thriving in cross-functional environments to solve complex challenges with diverse perspectives.
+                  </span>
+                </div>
+                <div className="text-xs text-primary font-medium pt-2 border-t border-white/10 w-full">
+                  Led 26-member design team • 30+ communications & 25+ digital assets delivered
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
+        {/* Contact */}
+        <section id="contact" className="px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-32">
+          <div className="flex flex-col items-center justify-center space-y-12 sm:space-y-16 max-w-5xl mx-auto">
+            {/* Header - Centered */}
+            <div className="flex flex-col items-center text-center space-y-4">
+              <span className="text-gradient clash-grotesk text-sm sm:text-base tracking-tighter font-medium">
+                Let&apos;s Connect
+              </span>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter leading-tight">
+                Ready to create{" "}
+                <span className="text-gradient clash-grotesk">impact?</span>
+              </h2>
+              <p className="text-base sm:text-lg tracking-tight text-muted-foreground max-w-2xl">
+                Available for Product Management, Analytics & Development opportunities
+                <span className="block mt-1 text-primary font-medium">Starting January 2026</span>
+              </p>
+            </div>
+
+            {/* Logo-based Contact Cards - Clean & Minimal */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full">
+              {/* Email */}
+              <Link href="mailto:kavinarasan2019@gmail.com" className="group block">
+                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <Mail className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" />
+                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                    Email
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1">Contact</span>
+                </div>
+              </Link>
+
+              {/* LinkedIn */}
+              <Link href="https://linkedin.com/in/kavinarasan" target="_blank" className="group block">
+                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <Linkedin className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-6" />
+                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                    LinkedIn
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1">Network</span>
+                </div>
+              </Link>
+
+              {/* GitHub */}
+              <Link href="https://github.com/kavinarasan-005" target="_blank" className="group block">
+                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <Code2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:-rotate-6" />
+                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                    GitHub
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1">Projects</span>
+                </div>
+              </Link>
+
+              {/* Resume */}
+              <Link href="https://drive.google.com/file/d/14HQoHIGPDlGffvKBwOrx6YKhjW8W4j9o/view?usp=sharing" target="_blank" className="group block">
+                <div className="flex flex-col items-center justify-center p-8 sm:p-10 md:p-12 rounded-2xl bg-white/5 border border-white/10 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/20 aspect-square">
+                  <FileText className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-primary mb-4 transition-all duration-500 group-hover:scale-125 group-hover:rotate-3" />
+                  <span className="text-sm sm:text-base font-medium text-foreground transition-colors duration-300 group-hover:text-primary">
+                    Resume
+                  </span>
+                  <span className="text-xs text-muted-foreground mt-1">Download</span>
+                </div>
+              </Link>
+            </div>
+
+            {/* Additional Info - Clean */}
+            <div className="flex flex-col items-center text-center space-y-2 pt-4">
+              <p className="text-sm text-muted-foreground">
+                Based in <span className="text-foreground font-medium">Dubai, UAE</span>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Open to Remote • Hybrid • On-site opportunities
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </Container>
   );

@@ -20,7 +20,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Spline error:', error, errorInfo);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Spline error:', error, errorInfo);
+    }
+    // Log to error tracking service in production if needed
   }
 
   render() {

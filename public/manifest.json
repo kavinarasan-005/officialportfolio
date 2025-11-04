@@ -1,13 +1,13 @@
 {
-    "theme_color": "#7B82FE",
+    "theme_color": "#7c3aed",
     "background_color": "#0A0A13",
     "display": "standalone",
     "orientation": "portrait",
     "scope": "/",
     "start_url": "/",
-    "name": "WendoJ",
-    "short_name": "WendoJ",
-    "description": "Full-stack website developer and TypeScript enthusiast.",
+    "name": "Kavin Arasan - Product & Data Analyst",
+    "short_name": "Kavin Arasan",
+    "description": "Product & Data Analyst passionate about turning data into decisions and insights into products.",
     "icons": [
         {
             "src": "/icon-192x192.png",
