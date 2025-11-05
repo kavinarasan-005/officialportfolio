@@ -2,6 +2,17 @@
 .nav {
   @apply fixed top-0 z-40 flex w-full flex-row items-center justify-between px-[1rem] py-8 2xl:px-[17rem];
 }
+
+/* Mobile navbar - sticky with solid background */
+@media (max-width: 768px) {
+  .nav {
+    position: sticky !important;
+    background: hsl(var(--background)) !important;
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
 .nav .desktop-nav {
   @apply hidden items-center space-x-5 text-center sm:flex;
 }
