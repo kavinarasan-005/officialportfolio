@@ -1303,7 +1303,7 @@ export default function Home() {
             {/* Header - Centered */}
             <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
               <span className="text-gradient clash-grotesk text-xs sm:text-sm md:text-base tracking-tighter font-medium">
-                Let&apos;s Connect
+                ✨ Let&apos;s Connect
               </span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl tracking-tighter leading-tight px-2">
                 Ready to create{" "}
